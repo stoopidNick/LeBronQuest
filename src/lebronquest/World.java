@@ -193,7 +193,7 @@ public class World {
     Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-System.out.println("    col=" + (col+1)+", row="+ row);
+System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row][col + 1]].isIsSolid());
         if ((col + 1) < MAP_WIDTH)
             return tiles[map[row][col + 1]];
         else return null;

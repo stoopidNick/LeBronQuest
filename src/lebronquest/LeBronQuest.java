@@ -299,8 +299,8 @@ public class LeBronQuest extends Application {
                     hero.setOnGround(false);
                     hero.setAccelerationY(GRAVITY);
                 }
-                System.out.println("----------------------");
-                System.out.println("UPDATED_FORCES"+hero);
+System.out.println("----------------------");
+System.out.println("UPDATED_FORCES"+hero);
             }
     
     private void handleCollisions() {
@@ -323,14 +323,13 @@ public class LeBronQuest extends Application {
         
 //tiles and hero
         //Right
-        
+System.out.println("$$$$$$$$$$$$$$$$$$ tileToTheRightOfHero.isIsSolid(="+tileToTheRightOfHero.isIsSolid());        
         if(tileToTheRightOfHero != null && tileToTheRightOfHero.isIsSolid() ){
             hero.setIsBlockedToTheRight(true);
 System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE RIGHT");
             if( hero.getFacingDirection() == Direction.EAST){
 System.out.println("$$$$$$$$$$$$$$$$$$ COLLISION TO  THE RIGHT");
            // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
-                
                 hero.setVelocityX(0);
                 hero.setAccelerationX(0);
             //}

@@ -17,7 +17,7 @@ import javafx.scene.image.ImageView;
  * @author transflorida
  */
 public class World {
-    private static String MAP_FILENAME = "map.txt";
+    private static String MAP_FILENAME = "src/resources/map.txt";
     private static int MAP_WIDTH;
     private static int MAP_HEIGHT;
     private int[][] map;
@@ -193,6 +193,7 @@ public class World {
     Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
+System.out.println("    col=" + (col+1)+", row="+ row);
         if ((col + 1) < MAP_WIDTH)
             return tiles[map[row][col + 1]];
         else return null;

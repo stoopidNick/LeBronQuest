@@ -40,7 +40,7 @@ public class LeBronQuest extends Application {
     private static final String SPLASH_TITLE = "Lebron Quest";
     private static final String SPLASH_IMAGE = "img/lbj simple.png";
     private static final String SPLASH_BUTTON_TEXT = "Start Game";
-    private static final String INTRO_MUSIC_FILE = "bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
+    private static final String INTRO_MUSIC_FILE = "src/resources/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
     private static final int SPLASH_WIDTH = 720;
     private static final int SPLASH_HEIGHT = 550;
     private Stage splashWindow;
@@ -48,7 +48,7 @@ public class LeBronQuest extends Application {
     
     private static final String GAME_ICON = "img/icon.png";
     private static final String GAME_TITLE = "Lebron Quest";
-    private static final String GAME_MUSIC_FILE = "bgm_12.mp3";
+    private static final String GAME_MUSIC_FILE = "src/resources/bgm_12.mp3";
     private static final Color GAME_BACKGROUND_COLOR = Color.AQUA;
     public static final int GAME_WIDTH = 30 * Tile.TILE_WIDTH; //Tile size is 32x32
     public static final int GAME_HEIGHT = 22 * Tile.TILE_WIDTH; //Tile size is 32x32
@@ -325,17 +325,27 @@ public class LeBronQuest extends Application {
         //Right
         
         if(tileToTheRightOfHero != null && tileToTheRightOfHero.isIsSolid() ){
+            hero.setIsBlockedToTheRight(true);
+System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE RIGHT");
+            if( hero.getFacingDirection() == Direction.EAST){
 System.out.println("$$$$$$$$$$$$$$$$$$ COLLISION TO  THE RIGHT");
            // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
-                hero.setIsBlockedToTheRight(true);
+                
                 hero.setVelocityX(0);
                 hero.setAccelerationX(0);
             //}
             
+            } else {
+System.out.println("$$$$$$$$$$$$$$$$$$ NO COLLISION TO  THE RIGHT");
+                hero.updatePositionX(hero.getDesiredPositionX());
+                hero.setVelocityX(hero.getDesiredVelocityX());
+            }
         } else {
+
+System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK TO  THE RIGHT");
             hero.setIsBlockedToTheRight(false);
             hero.updatePositionX(hero.getDesiredPositionX());
-            hero.setVelocityX(hero.getDesiredVelocityX()); 
+            hero.setVelocityX(hero.getDesiredVelocityX());
         }
         //Left
         /*

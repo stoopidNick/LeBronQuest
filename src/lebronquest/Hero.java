@@ -28,7 +28,7 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     private boolean isBlockedToTheLeft;
     private boolean isBlockedAbove;
     
-    private boolean keyReleased = true;
+    private boolean XAxisKeyPressed = false;
     
   
 
@@ -127,7 +127,8 @@ System.out.println("UPDATED       "+this);
         
         
         //animating hero
-        if(desiredVelocityX != 0){
+        //if(desiredVelocityX != 0){
+        if(XAxisKeyPressed){
             viewportCounter =  (++viewportCounter) % (viewports.size());
             imageView.setViewport(viewports.get(viewportCounter));
         }
@@ -136,24 +137,25 @@ System.out.println("UPDATED       "+this);
     @Override
     public void handle(KeyEvent event) {
 System.out.println("              isBlockedToTheRight="+isBlockedToTheRight);
-        if(event.getEventType() == KeyEvent.KEY_PRESSED  && keyReleased){
-            keyReleased = false;
+
+        if(event.getEventType() == KeyEvent.KEY_PRESSED  && !XAxisKeyPressed){
+            XAxisKeyPressed = true;
+System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
             viewportCounter = ++viewportCounter % viewports.size();
             if(event.getCode() == KeyCode.LEFT){
                 //velocityX = velocityX - speed;
                 accelerationX -= dAccelerationX;
                 imageView.setScaleX(-1);//flips the image
                 facingDirection = Direction.WEST;
-System.out.println("HANDLED KEY PR"+this);
+System.out.println("HAN LFT KEY PR"+this);
             } else if(event.getCode() == KeyCode.RIGHT && !isBlockedToTheRight){
                 //velocityX = velocityX + speed;
                 accelerationX += dAccelerationX;
                 imageView.setScaleX(1);//flips the image
                 facingDirection = Direction.EAST;
+System.out.println("HAN RGT KEY PR"+this);
             } else if(event.getCode() == KeyCode.UP){
                 facingDirection = Direction.UP;
-                
-                
                 isJumping = true;
 System.out.println("jumping?"+onGround);
                 if(onGround){
@@ -181,16 +183,18 @@ System.out.println("jumping?"+onGround);
                 ZombieInvaders.addArrow(arrow);
                 */
             }
-System.out.println("HANDLED KEY PR"+this);
  
         } else if(event.getEventType() == KeyEvent.KEY_RELEASED){
-            keyReleased = true;
+            XAxisKeyPressed = false;
+System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
             if(event.getCode() == KeyCode.LEFT){
                 //velocityX = velocityX + speed;
                 accelerationX += dAccelerationX;
+System.out.println("HAN LFT KEY RE"+this);
             } else if(event.getCode() == KeyCode.RIGHT  && !isBlockedToTheRight){
                 //velocityX = velocityX - speed;
                 accelerationX -= dAccelerationX;
+System.out.println("HAN RGT KEY RE"+this);
             }else if(event.getCode() == KeyCode.UP){
 System.out.println("jumping?"+onGround);
                 if(onGround){
@@ -203,7 +207,7 @@ System.out.println("jumping?"+onGround);
                 velocityY = 0;
             }
  
-System.out.println("HANDLED KEY RE"+this);
+
         }
 
     }

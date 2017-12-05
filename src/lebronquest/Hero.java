@@ -148,9 +148,11 @@ System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
                 imageView.setScaleX(-1);//flips the image
                 facingDirection = Direction.WEST;
 System.out.println("HAN LFT KEY PR"+this);
-            } else if(event.getCode() == KeyCode.RIGHT && !isBlockedToTheRight){
+            } else if(event.getCode() == KeyCode.RIGHT ){
                 //velocityX = velocityX + speed;
-                accelerationX += dAccelerationX;
+                if(!isBlockedToTheRight){
+                    accelerationX += dAccelerationX;
+                }
                 imageView.setScaleX(1);//flips the image
                 facingDirection = Direction.EAST;
 System.out.println("HAN RGT KEY PR"+this);

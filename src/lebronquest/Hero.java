@@ -77,8 +77,7 @@ System.out.println("CREATED       "+this);
 
     
     public void update(float dt) {
-        if(onGround){
-            
+        if(onGround){            
             if(Math.abs(accelerationX - 0) < 0.01){
                 accelerationX = 0;
             } 
@@ -90,8 +89,7 @@ System.out.println("CREATED       "+this);
                 } else if(velocityX < 0){ //add friction
                     velocityX += 0.2;
                 }
-            }
-            
+            }            
         }
         //Use Physics (kinematic equations) to determine next position and velocity
         desiredVelocityX = accelerationX * dt + velocityX;
@@ -101,33 +99,9 @@ System.out.println("CREATED       "+this);
         desiredPositionX = accelerationX * dt2 / 2 + velocityX * dt + positionX;
         desiredPositionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;      
         
-System.out.println("UPDATED       "+this);
+System.out.println("UPDATED       " + this);
 
-        //boundaries
-        if(imageView.getTranslateX() < 0 ){
-            desiredPositionX = 0;
-            desiredVelocityX = 0;
-        }
-        if(imageView.getTranslateX() > LeBronQuest.GAME_WIDTH){
-            desiredPositionX = LeBronQuest.GAME_WIDTH;
-            desiredVelocityX = 0;
-        }
-        if(imageView.getTranslateY() < 0) {
-            desiredPositionY = 0;
-            desiredVelocityY = 0;
-        }
-        if(imageView.getTranslateY() > LeBronQuest.GAME_HEIGHT){
-            desiredPositionY = LeBronQuest.GAME_HEIGHT;
-            desiredVelocityY = 0;
-        }
-        
-        //done by the game after checking for collision
-        //imageView.setTranslateX(positionX);
-        //imageView.setTranslateY(positionY);
-        
-        
         //animating hero
-        //if(desiredVelocityX != 0){
         if(XAxisKeyPressed){
             viewportCounter =  (++viewportCounter) % (viewports.size());
             imageView.setViewport(viewports.get(viewportCounter));
@@ -137,6 +111,7 @@ System.out.println("UPDATED       "+this);
     @Override
     public void handle(KeyEvent event) {
 System.out.println("              isBlockedToTheRight="+isBlockedToTheRight);
+System.out.println("              isBlockedToTheLeft="+isBlockedToTheLeft);
 
         if(event.getEventType() == KeyEvent.KEY_PRESSED  && !XAxisKeyPressed){
             XAxisKeyPressed = true;
@@ -144,9 +119,11 @@ System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
             viewportCounter = ++viewportCounter % viewports.size();
             if(event.getCode() == KeyCode.LEFT){
                 //velocityX = velocityX - speed;
-                accelerationX -= dAccelerationX;
+                if(!isBlockedToTheLeft){
+                    accelerationX -= dAccelerationX;
+                }
                 imageView.setScaleX(-1);//flips the image
-                facingDirection = Direction.WEST;
+                facingDirection = Direction.LEFT;
 System.out.println("HAN LFT KEY PR"+this);
             } else if(event.getCode() == KeyCode.RIGHT ){
                 //velocityX = velocityX + speed;
@@ -154,7 +131,7 @@ System.out.println("HAN LFT KEY PR"+this);
                     accelerationX += dAccelerationX;
                 }
                 imageView.setScaleX(1);//flips the image
-                facingDirection = Direction.EAST;
+                facingDirection = Direction.RIGHT;
 System.out.println("HAN RGT KEY PR"+this);
             } else if(event.getCode() == KeyCode.UP){
                 facingDirection = Direction.UP;
@@ -189,7 +166,7 @@ System.out.println("jumping?"+onGround);
         } else if(event.getEventType() == KeyEvent.KEY_RELEASED){
             XAxisKeyPressed = false;
 System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
-            if(event.getCode() == KeyCode.LEFT){
+            if(event.getCode() == KeyCode.LEFT && !isBlockedToTheLeft){
                 //velocityX = velocityX + speed;
                 accelerationX += dAccelerationX;
 System.out.println("HAN LFT KEY RE"+this);

@@ -10,5 +10,5 @@ package lebronquest;
  * @author transflorida
  */
 public enum Direction {
-    EAST, WEST, UP, DOWN
+    RIGHT, LEFT, UP, DOWN
 }

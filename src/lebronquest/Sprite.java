@@ -19,8 +19,8 @@ public abstract class Sprite {
     protected String imageFile;
     protected Image image;
     protected ImageView imageView;
-    protected float width;
-    protected float height;
+    protected float width;//width is constant, we take the width of the first viewport
+    protected float height;//same
     //protected int dx; //next x-axis translation
     //protected int dy; //next y-axis translation
     protected boolean isVisible;

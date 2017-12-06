@@ -19,6 +19,8 @@ public abstract class Sprite {
     protected String imageFile;
     protected Image image;
     protected ImageView imageView;
+    protected float width;
+    protected float height;
     //protected int dx; //next x-axis translation
     //protected int dy; //next y-axis translation
     protected boolean isVisible;
@@ -30,13 +32,15 @@ public abstract class Sprite {
         this.image = new Image(imageFile);
         this.isVisible = isVisible;
         //this.dx = dx;
-
+        
         imageView = new ImageView(this.image);
         imageView.setCache(true);
         imageView.setSmooth(true);
         viewports = viewportsCoords;
         viewportCounter = 0;
         imageView.setViewport(viewports.get(viewportCounter));
+        width = (float) this.getImageView().getBoundsInParent().getWidth();
+        height = (float) this.getImageView().getBoundsInParent().getHeight();
         imageView.setTranslateX(initialX);//initial x
         imageView.setTranslateY(initialY);//initial y
     }
@@ -48,11 +52,11 @@ public abstract class Sprite {
     }
 
     public float getWidth() {
-        return (float) this.getImageView().getBoundsInParent().getWidth();
+        return width;
     }
 
     public float getHeight() {
-        return (float) this.getImageView().getBoundsInParent().getHeight();
+        return height;
     }
     
 

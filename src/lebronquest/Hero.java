@@ -18,10 +18,10 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     private float velocityY;
     private float accelerationX;    
     private float accelerationY;
-    private float desiredPositionX;
-    private float desiredPositionY;    
-    private float desiredVelocityX;
-    private float desiredVelocityY;
+    //private float desiredPositionX;
+    //private float desiredPositionY;    
+    //private float desiredVelocityX;
+    //private float desiredVelocityY;
     private boolean onGround;
     private boolean isJumping;
     private boolean isBlockedToTheRight;
@@ -45,13 +45,13 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
         velocityY = 0;
         accelerationX = 0;
         accelerationY = LeBronQuest.GRAVITY;
-        desiredPositionX = positionX;
-        desiredPositionY = positionY;
-        desiredVelocityX = velocityX;
-        desiredVelocityY = velocityY;
-System.out.println("CREATED       "+this);      
-        updatePositionX(initialX);
-        updatePositionY(initialY);
+//        desiredPositionX = positionX;
+//        desiredPositionY = positionY;
+//        desiredVelocityX = velocityX;
+//        desiredVelocityY = velocityY;
+//System.out.println("CREATED       "+this);      
+//        updatePositionX(initialX);
+//        updatePositionY(initialY);
         
     }
     
@@ -68,10 +68,10 @@ System.out.println("CREATED       "+this);
         velocityY = 0;
         accelerationX = 0;
         accelerationY = LeBronQuest.GRAVITY;
-        desiredPositionX = positionX;
-        desiredPositionY = positionY;
-        desiredVelocityX = velocityX;
-        desiredVelocityY = velocityY;
+//        desiredPositionX = positionX;
+//        desiredPositionY = positionY;
+//        desiredVelocityX = velocityX;
+//        desiredVelocityY = velocityY;
 System.out.println("CREATED       "+this);
     }
 
@@ -92,16 +92,20 @@ System.out.println("CREATED       "+this);
             }            
         }
         //Use Physics (kinematic equations) to determine next position and velocity
-        desiredVelocityX = accelerationX * dt + velocityX;
-        desiredVelocityY = accelerationY * dt + velocityY;
+        velocityX = accelerationX * dt + velocityX;
+        velocityY = accelerationY * dt + velocityY;
         
         float dt2 = (float) Math.pow(dt, 2);
-        desiredPositionX = accelerationX * dt2 / 2 + velocityX * dt + positionX;
-        desiredPositionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;      
+        positionX = accelerationX * dt2 / 2 + velocityX * dt + positionX;
+        positionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;      
         
-System.out.println("UPDATED       " + this);
+        imageView.setTranslateX(positionX);
+        imageView.setTranslateY(positionY);
+        
+System.out.println("UPDATED       "+this);
 
         //animating hero
+        //if(desiredVelocityX != 0){
         if(XAxisKeyPressed){
             viewportCounter =  (++viewportCounter) % (viewports.size());
             imageView.setViewport(viewports.get(viewportCounter));
@@ -114,10 +118,11 @@ System.out.println("              isBlockedToTheRight="+isBlockedToTheRight);
 System.out.println("              isBlockedToTheLeft="+isBlockedToTheLeft);
 
         if(event.getEventType() == KeyEvent.KEY_PRESSED  && !XAxisKeyPressed){
-            XAxisKeyPressed = true;
+            
 System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
             viewportCounter = ++viewportCounter % viewports.size();
             if(event.getCode() == KeyCode.LEFT){
+                XAxisKeyPressed = true;
                 //velocityX = velocityX - speed;
                 if(!isBlockedToTheLeft){
                     accelerationX -= dAccelerationX;
@@ -126,6 +131,7 @@ System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
                 facingDirection = Direction.LEFT;
 System.out.println("HAN LFT KEY PR"+this);
             } else if(event.getCode() == KeyCode.RIGHT ){
+                XAxisKeyPressed = true;
                 //velocityX = velocityX + speed;
                 if(!isBlockedToTheRight){
                     accelerationX += dAccelerationX;
@@ -134,12 +140,14 @@ System.out.println("HAN LFT KEY PR"+this);
                 facingDirection = Direction.RIGHT;
 System.out.println("HAN RGT KEY PR"+this);
             } else if(event.getCode() == KeyCode.UP){
+
                 facingDirection = Direction.UP;
                 isJumping = true;
 System.out.println("jumping?"+onGround);
                 if(onGround){
-                    setAccelerationY(getAccelerationY() - GRAVITY);
+                    accelerationY -= 2;
                 }
+System.out.println("HAND UP KEY PR"+this);
             } else if(event.getCode() == KeyCode.DOWN){
                 facingDirection = Direction.DOWN;
                 //velocityY = velocityY + speed;
@@ -164,23 +172,29 @@ System.out.println("jumping?"+onGround);
             }
  
         } else if(event.getEventType() == KeyEvent.KEY_RELEASED){
-            XAxisKeyPressed = false;
+            
 System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
-            if(event.getCode() == KeyCode.LEFT && !isBlockedToTheLeft){
+            if(event.getCode() == KeyCode.LEFT ){
+                XAxisKeyPressed = false;
                 //velocityX = velocityX + speed;
-                accelerationX += dAccelerationX;
+                if( !isBlockedToTheLeft){
+                    accelerationX += dAccelerationX;
+                }
 System.out.println("HAN LFT KEY RE"+this);
-            } else if(event.getCode() == KeyCode.RIGHT  && !isBlockedToTheRight){
+            } else if(event.getCode() == KeyCode.RIGHT ){
+                XAxisKeyPressed = false;
+                if(!isBlockedToTheRight){
                 //velocityX = velocityX - speed;
-                accelerationX -= dAccelerationX;
+                    accelerationX -= dAccelerationX;
+                }
 System.out.println("HAN RGT KEY RE"+this);
             }else if(event.getCode() == KeyCode.UP){
-System.out.println("jumping?"+onGround);
-                if(onGround){
-                    setAccelerationY(getAccelerationY() + GRAVITY);
-                }
-                //velocityY = velocityY + speed;
-                velocityY = 0;
+//System.out.println("jumping?"+onGround);
+//                if(onGround){
+//                    setAccelerationY(getAccelerationY() + GRAVITY);
+//                }
+//                //velocityY = velocityY + speed;
+//                velocityY = 0;
             } else if(event.getCode() == KeyCode.DOWN){
                 //velocityY = velocityY - speed;
                 velocityY = 0;
@@ -198,22 +212,6 @@ System.out.println("jumping?"+onGround);
 
     public float getAccelerationY() {
         return accelerationY;
-    }
-
-    public float getDesiredPositionX() {
-        return desiredPositionX;
-    }
-
-    public float getDesiredPositionY() {
-        return desiredPositionY;
-    }
-
-    public float getDesiredVelocityX() {
-        return desiredVelocityX;
-    }
-
-    public float getDesiredVelocityY() {
-        return desiredVelocityY;
     }
 
     public float getPositionX() {
@@ -246,12 +244,11 @@ System.out.println("jumping?"+onGround);
 
     public boolean isIsJumping() {
         return isJumping;
-    }
-    
-    
+    }  
 
     public void setOnGround(boolean onGround) {
         this.onGround = onGround;
+        isJumping = false;
     }
 
     public void setHealth(int health){
@@ -299,21 +296,23 @@ System.out.println("  SETTER   isBlockedToTheRight="+isBlockedToTheRight);
 
     
     
-    public void updatePositionX(float translateX){
+    public void setPositionX(float translateX){
         imageView.setTranslateX(translateX);
         positionX = translateX;
         
     }
     
-    public void updatePositionY(float translateY){
+    public void setPositionY(float translateY){
         imageView.setTranslateY(translateY);
         positionY = translateY;
     }
 
     @Override
     public String toString() {
-        return "Hero{" + "health=" + health + ", facingDirection=" + facingDirection +  ", positionX=" + positionX + ", positionY=" + positionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", desiredPositionX=" + desiredPositionX + ", desiredPositionY=" + desiredPositionY + ", desiredVelocityX=" + desiredVelocityX + ", desiredVelocityY=" + desiredVelocityY + ", onGround=" + onGround + '}';
+        return "Hero{" + "health=" + health + ", facingDirection=" + facingDirection + ", dAccelerationX=" + dAccelerationX + ", positionX=" + positionX + ", positionY=" + positionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isJumping=" + isJumping + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + ", XAxisKeyPressed=" + XAxisKeyPressed + '}';
     }
+
+    
     
     
     

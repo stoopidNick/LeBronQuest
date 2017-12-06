@@ -308,6 +308,8 @@ System.out.println("jumping?"+onGround);
 
     public void setIsBlockedToTheRight(boolean isBlockedToTheRight) {
         this.isBlockedToTheRight = isBlockedToTheRight;
+        
+System.out.println("  SETTER   isBlockedToTheRight="+isBlockedToTheRight);
     }
 
     public void setIsBlockedToTheLeft(boolean isBlockedToTheLeft) {

@@ -223,7 +223,7 @@ public class LeBronQuest extends Application {
         heroViewPorts.add(new Rectangle2D(185, 0, 20, 36));
         heroViewPorts.add(new Rectangle2D(232, 0, 19, 36));
 
-        hero = new Hero("img/hero.png", true, heroViewPorts, MAX_HEALTH, Direction.RIGHT, true);
+        hero = new Hero("img/hero.png", true, heroViewPorts, MAX_HEALTH, Direction.RIGHT);
         gameRoot.applyCss();
         gameRoot.layout();
         hero.setPositionX(Tile.TILE_WIDTH / 2);
@@ -262,17 +262,24 @@ public class LeBronQuest extends Application {
         tileAboveToTheLeftOfHero = world.getTileAboveToTheLeft( hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
         tileBelowToTheRightOfHero = world.getTileBelowToTheRight( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
         tileBelowToTheLeftOfHero = world.getTileBelowToTheLeft( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
-
+System.out.println("----------------------");
         //vertically
-        if(tileBelowHero != null && tileBelowHero.isIsSolid()) {
+        if(tileBelowHero != null && tileBelowHero.isIsSolid() ) {
+ System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
-            hero.setOnGround(true);
-            hero.setAccelerationY(0);
-            hero.setVelocityY(0);
+            if(!hero.isOnGround()){
+                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW");
+                hero.setOnGround(true);
+                hero.setIsJumping(false);
+                //hero.setAccelerationY(hero.getAccelerationY() - GRAVITY);
+                hero.setAccelerationY(0);
+                hero.setVelocityY(0);
+            }
         } else {                    
+ System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
             hero.setOnGround(false);
-            hero.setAccelerationY(GRAVITY);
+            hero.setAccelerationY(hero.getAccelerationY() + GRAVITY);
         }
                 
         //horizontally        
@@ -348,7 +355,7 @@ public class LeBronQuest extends Application {
                 
                 
                 
-System.out.println("----------------------");
+
 System.out.println("UPDATED_FORCES"+hero);
             }
     

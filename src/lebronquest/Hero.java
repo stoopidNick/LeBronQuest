@@ -33,11 +33,11 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
   
 
     public Hero(String imageFile, int initialX, int initialY, boolean isVisible,
-            ArrayList<Rectangle2D> viewportsCoords, int health, Direction facingDirection, boolean onGround) {
+            ArrayList<Rectangle2D> viewportsCoords, int health, Direction facingDirection) {
         super(imageFile, initialX, initialY, isVisible, viewportsCoords);
         this.health = health;
         this.facingDirection = facingDirection;
-        this.onGround = onGround;
+        this.onGround = false;
         isJumping = false;
         positionX = initialX;
         positionY = initialY;
@@ -56,11 +56,11 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     }
     
     public Hero(String imageFile, boolean isVisible,
-            ArrayList<Rectangle2D> viewportsCoords, int health, Direction facingDirection, boolean onGround) {
+            ArrayList<Rectangle2D> viewportsCoords, int health, Direction facingDirection) {
         super(imageFile, 0, 0, isVisible, viewportsCoords);
         this.health = health;
         this.facingDirection = facingDirection;
-        this.onGround = onGround;
+        this.onGround = false;
         isJumping = false;
         positionX = 0;
         positionY = 0;
@@ -117,11 +117,11 @@ System.out.println("UPDATED       "+this);
 System.out.println("              isBlockedToTheRight="+isBlockedToTheRight);
 System.out.println("              isBlockedToTheLeft="+isBlockedToTheLeft);
 
-        if(event.getEventType() == KeyEvent.KEY_PRESSED  && !XAxisKeyPressed){
+        if(event.getEventType() == KeyEvent.KEY_PRESSED ){
             
 System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
             viewportCounter = ++viewportCounter % viewports.size();
-            if(event.getCode() == KeyCode.LEFT){
+            if(event.getCode() == KeyCode.LEFT  && !XAxisKeyPressed){
                 XAxisKeyPressed = true;
                 //velocityX = velocityX - speed;
                 if(!isBlockedToTheLeft){
@@ -130,7 +130,7 @@ System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
                 imageView.setScaleX(-1);//flips the image
                 facingDirection = Direction.LEFT;
 System.out.println("HAN LFT KEY PR"+this);
-            } else if(event.getCode() == KeyCode.RIGHT ){
+            } else if(event.getCode() == KeyCode.RIGHT  && !XAxisKeyPressed ){
                 XAxisKeyPressed = true;
                 //velocityX = velocityX + speed;
                 if(!isBlockedToTheRight){
@@ -141,17 +141,19 @@ System.out.println("HAN LFT KEY PR"+this);
 System.out.println("HAN RGT KEY PR"+this);
             } else if(event.getCode() == KeyCode.UP){
 
-                facingDirection = Direction.UP;
-                isJumping = true;
-System.out.println("jumping?"+onGround);
+                //facingDirection = Direction.UP;
+                
+System.out.println("isJumping?"+isJumping);
+System.out.println("onGround?"+onGround);
                 if(onGround){
-                    accelerationY -= 2;
+                    accelerationY -= 4;
+                    isJumping = true;
                 }
 System.out.println("HAND UP KEY PR"+this);
             } else if(event.getCode() == KeyCode.DOWN){
                 facingDirection = Direction.DOWN;
                 //velocityY = velocityY + speed;
-            }else if(event.getCode() == KeyCode.SPACE) {
+            } else if(event.getCode() == KeyCode.SPACE) {
                 /*
                 //create arrow
                 Rectangle2D viewport = new Rectangle2D(2, 9, 20, 9); 

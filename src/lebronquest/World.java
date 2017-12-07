@@ -159,7 +159,7 @@ public class World {
     Tile getTileAbove(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((row - 1) >= 0)
+        if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH)
             return tiles[map[row - 1][col]];
         else return null;
     }
@@ -167,7 +167,7 @@ public class World {
     ImageView getTileImageViewAbove(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((row - 1) >= 0)
+        if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH)
             return imageViewMap[row - 1][col];
         else return null;
     }
@@ -175,27 +175,26 @@ public class World {
     Tile getTileBelow(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((row + 1) < MAP_HEIGHT){
+        if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH)
             return tiles[map[row + 1][col]];
-        }
         else return null;
     }
     
     ImageView getTileImageViewBelow(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((row + 1) < MAP_HEIGHT){
+        if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH)
             return imageViewMap[row + 1][col];
-        }
         else return null;
     }
 
     Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-System.out.println("    positionX=" + positionX+", positionY="+ positionY+ "width=" + width + "height=" + height );
-System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row][col + 1]].isIsSolid());
-        if ((col + 1) < MAP_WIDTH)
+//System.out.println("    positionX=" + positionX+", positionY="+ positionY+ "width=" + width + "height=" + height );
+//System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row][col + 1]].isIsSolid());
+        
+        if (row >= 0 && row < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return tiles[map[row][col + 1]];
         else return null;
     }
@@ -203,7 +202,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     ImageView getTileImageViewToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col + 1) < MAP_WIDTH)
+        if (row >= 0 && row < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return imageViewMap[row][col + 1];
         else return null;
     }
@@ -211,7 +210,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     Tile getTileToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col - 1) >= 0)
+        if (row >= 0 && row < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
             return tiles[map[row][col - 1]];
         else return null;
     }
@@ -219,7 +218,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     ImageView getTileImageViewToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col - 1) >= 0)
+        if (row >= 0 && row < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
             return imageViewMap[row][col - 1];
         else return null;
     }
@@ -227,7 +226,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     Tile getTileAboveToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col + 1) < MAP_WIDTH && (row - 1) >= 0)
+        if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return tiles[map[row - 1][col + 1]];
         else return null;
     }
@@ -235,7 +234,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     ImageView getTileImageViewAboveToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col + 1) < MAP_WIDTH && (row - 1) >= 0)
+        if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return imageViewMap[row - 1][col + 1];
         else return null;
     }
@@ -243,7 +242,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     Tile getTileAboveToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col - 1) >= 0 && (row - 1) >= 0)
+        if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
             return tiles[map[row - 1][col - 1]];
         else return null;
     }
@@ -251,7 +250,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     ImageView getTileImageViewAboveToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col - 1) >= 0 && (row - 1) >= 0)
+        if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
             return imageViewMap[row - 1][col - 1];
         else return null;
     }
@@ -259,7 +258,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     Tile getTileBelowToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col + 1) < MAP_WIDTH && (row + 1) < MAP_HEIGHT)
+        if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return tiles[map[row + 1][col + 1]];
         else return null;
     }
@@ -267,7 +266,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     ImageView getTileImageViewBelowToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col + 1) < MAP_WIDTH && (row + 1) < MAP_HEIGHT)
+        if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return imageViewMap[row + 1][col + 1];
         else return null;
     }
@@ -275,7 +274,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     Tile getTileBelowToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col - 1) >= 0 && (row + 1) < MAP_HEIGHT)
+        if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
             return tiles[map[row + 1][col - 1]];
         else return null;
     }
@@ -283,7 +282,7 @@ System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row
     ImageView getTileImageViewBelowToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / Tile.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / Tile.TILE_WIDTH);
-        if ((col - 1) >= 0 && (row + 1) < MAP_HEIGHT)
+        if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
             return imageViewMap[row + 1][col - 1];
         else return null;
     }

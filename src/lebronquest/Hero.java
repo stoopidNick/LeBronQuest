@@ -11,7 +11,8 @@ import static lebronquest.LeBronQuest.GRAVITY;
 public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     private int health;   
     public Direction facingDirection;
-    private float dAccelerationX = 0.8f;
+    private float dAccelerationX = 0.8f;    
+    private float dAccelerationY = 50f;
     private float positionX;
     private float positionY;
     private float velocityX;
@@ -23,12 +24,12 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     //private float desiredVelocityX;
     //private float desiredVelocityY;
     private boolean onGround;
-    private boolean isJumping;
     private boolean isBlockedToTheRight;
     private boolean isBlockedToTheLeft;
     private boolean isBlockedAbove;
     
-    private boolean XAxisKeyPressed = false;
+    private boolean leftKeyPressed = false;
+    private boolean rightKeyPressed = false;
     
   
 
@@ -38,7 +39,6 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
         this.health = health;
         this.facingDirection = facingDirection;
         this.onGround = false;
-        isJumping = false;
         positionX = initialX;
         positionY = initialY;
         velocityX = 0;
@@ -61,7 +61,6 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
         this.health = health;
         this.facingDirection = facingDirection;
         this.onGround = false;
-        isJumping = false;
         positionX = 0;
         positionY = 0;
         velocityX = 0;
@@ -106,7 +105,7 @@ System.out.println("UPDATED       "+this);
 
         //animating hero
         //if(desiredVelocityX != 0){
-        if(XAxisKeyPressed){
+        if(leftKeyPressed || rightKeyPressed){
             viewportCounter =  (++viewportCounter) % (viewports.size());
             imageView.setViewport(viewports.get(viewportCounter));
         }
@@ -119,40 +118,41 @@ System.out.println("              isBlockedToTheLeft="+isBlockedToTheLeft);
 
         if(event.getEventType() == KeyEvent.KEY_PRESSED ){
             
-System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
-            viewportCounter = ++viewportCounter % viewports.size();
-            if(event.getCode() == KeyCode.LEFT  && !XAxisKeyPressed){
-                XAxisKeyPressed = true;
+            //viewportCounter = ++viewportCounter % viewports.size();
+            
+            if(event.getCode() == KeyCode.LEFT  && !leftKeyPressed){
+                leftKeyPressed = true;
+System.out.println("      leftKeyPressed="+leftKeyPressed);
                 //velocityX = velocityX - speed;
                 if(!isBlockedToTheLeft){
                     accelerationX -= dAccelerationX;
                 }
                 imageView.setScaleX(-1);//flips the image
                 facingDirection = Direction.LEFT;
-System.out.println("HAN LFT KEY PR"+this);
-            } else if(event.getCode() == KeyCode.RIGHT  && !XAxisKeyPressed ){
-                XAxisKeyPressed = true;
+System.out.println("HAN LFT KEY  PR"+this);
+            } else if(event.getCode() == KeyCode.RIGHT  && !rightKeyPressed ){
+                rightKeyPressed = true;
+System.out.println("      rightKeyPressed="+rightKeyPressed);
                 //velocityX = velocityX + speed;
                 if(!isBlockedToTheRight){
                     accelerationX += dAccelerationX;
                 }
                 imageView.setScaleX(1);//flips the image
                 facingDirection = Direction.RIGHT;
-System.out.println("HAN RGT KEY PR"+this);
+System.out.println("HAN RGT KEY  PR"+this);
             } else if(event.getCode() == KeyCode.UP){
 
                 //facingDirection = Direction.UP;
-                
-System.out.println("isJumping?"+isJumping);
+
 System.out.println("onGround?"+onGround);
                 if(onGround){
-                    accelerationY -= 4;
-                    isJumping = true;
+                    accelerationY -= dAccelerationY;
                 }
 System.out.println("HAND UP KEY PR"+this);
             } else if(event.getCode() == KeyCode.DOWN){
                 facingDirection = Direction.DOWN;
                 //velocityY = velocityY + speed;
+System.out.println("HAND DO KEY PR"+this);
             } else if(event.getCode() == KeyCode.SPACE) {
                 /*
                 //create arrow
@@ -171,25 +171,28 @@ System.out.println("HAND UP KEY PR"+this);
                 }
                 ZombieInvaders.addArrow(arrow);
                 */
+System.out.println("HAND SP KEY PR"+this);
             }
  
         } else if(event.getEventType() == KeyEvent.KEY_RELEASED){
             
-System.out.println("      XAxisKeyPressed="+XAxisKeyPressed);
+
             if(event.getCode() == KeyCode.LEFT ){
-                XAxisKeyPressed = false;
+                leftKeyPressed = false;
+System.out.println("      leftKeyPressed="+leftKeyPressed);
                 //velocityX = velocityX + speed;
                 if( !isBlockedToTheLeft){
                     accelerationX += dAccelerationX;
                 }
-System.out.println("HAN LFT KEY RE"+this);
+System.out.println("HAN LFT KEY  RE"+this);
             } else if(event.getCode() == KeyCode.RIGHT ){
-                XAxisKeyPressed = false;
+                rightKeyPressed = false;
+System.out.println("      rightKeyPressed="+rightKeyPressed);
                 if(!isBlockedToTheRight){
                 //velocityX = velocityX - speed;
                     accelerationX -= dAccelerationX;
                 }
-System.out.println("HAN RGT KEY RE"+this);
+System.out.println("HAN RGT KEY  RE"+this);
             }else if(event.getCode() == KeyCode.UP){
 //System.out.println("jumping?"+onGround);
 //                if(onGround){
@@ -197,9 +200,11 @@ System.out.println("HAN RGT KEY RE"+this);
 //                }
 //                //velocityY = velocityY + speed;
 //                velocityY = 0;
+System.out.println("HAN UP KEY  RE"+this);
             } else if(event.getCode() == KeyCode.DOWN){
                 //velocityY = velocityY - speed;
-                velocityY = 0;
+                //velocityY = 0;
+System.out.println("HAN DO KEY  RE"+this);
             }
  
 
@@ -243,14 +248,10 @@ System.out.println("HAN RGT KEY RE"+this);
     public boolean isOnGround() {
         return onGround;
     }
-
-    public boolean isIsJumping() {
-        return isJumping;
-    }  
+ 
 
     public void setOnGround(boolean onGround) {
         this.onGround = onGround;
-        isJumping = false;
     }
 
     public void setHealth(int health){
@@ -273,11 +274,6 @@ System.out.println("HAN RGT KEY RE"+this);
         this.accelerationX = accelerationX;        
     }
 
-    public void setIsJumping(boolean isJumping) {
-        this.isJumping = isJumping;
-    }
-    
-
     public void setAccelerationY(float accelerationY) {
         this.accelerationY = accelerationY;
     }
@@ -293,8 +289,6 @@ System.out.println("HAN RGT KEY RE"+this);
     public void setIsBlockedAbove(boolean isBlockedAbove) {
         this.isBlockedAbove = isBlockedAbove;
     }
-
-    
     
     public void setPositionX(float translateX){
         imageView.setTranslateX(translateX);
@@ -309,13 +303,6 @@ System.out.println("HAN RGT KEY RE"+this);
 
     @Override
     public String toString() {
-        return "Hero{" + "health=" + health + ", facingDirection=" + facingDirection + ", dAccelerationX=" + dAccelerationX + ", positionX=" + positionX + ", positionY=" + positionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isJumping=" + isJumping + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + ", XAxisKeyPressed=" + XAxisKeyPressed + '}';
+        return "Hero{" + "health=" + health + ", facingDirection=" + facingDirection + ", dAccelerationX=" + dAccelerationX + ", positionX=" + positionX + ", positionY=" + positionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + ", XAxisKeyPressed=" + leftKeyPressed + '}';
     }
-
-    
-    
-    
-    
-    
-    
 }

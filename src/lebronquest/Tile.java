@@ -5,37 +5,44 @@
  */
 package lebronquest;
 
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  *
  * @author transflorida
  */
 public class Tile {
-    //Images for the tiles should be 32x32
-    public static final int TILE_WIDTH = 32;
-    public static final int TILE_HEIGHT = 32; 
-    private boolean isSolid;
-    private Image image;
+    private ImageView imageView;
+    private TileType type;
 
-    public Tile(String filename, boolean isSolid) {
-        image = new Image(filename);
-        this.isSolid = isSolid;
+    public Tile(ImageView imageView, TileType type) {
+        this.imageView = imageView;
+        this.type = type;
+    }
+    
+    
+
+    public TileType getType() {
+        return type;
     }
 
-    public boolean isIsSolid() {
-        return isSolid;
+    public void setType(TileType type) {
+        this.type = type;
     }
 
-    public Image getImage() {
-        return image;
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
     @Override
     public String toString() {
-        return "Tile{" + "isSolid=" + isSolid + ", image=" + image + '}';
+        return "Tile{" + "imageView=" + imageView + ", type=" + type + '}';
     }
-    
+
     
     
 }

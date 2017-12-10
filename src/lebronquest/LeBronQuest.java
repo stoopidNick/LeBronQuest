@@ -50,10 +50,13 @@ public class LeBronQuest extends Application {
     private static final String GAME_TITLE = "Lebron Quest";
     private static final String GAME_MUSIC_FILE = "src/resources/bgm_12.mp3";
     private static final Color GAME_BACKGROUND_COLOR = Color.AQUA;
-    public static final int GAME_WIDTH = 30 * Tile.TILE_WIDTH; //Tile size is 32x32
-    public static final int GAME_HEIGHT = 22 * Tile.TILE_WIDTH; //Tile size is 32x32
+    public static final int GAME_WIDTH = 30 * TileType.TILE_WIDTH; //Tile size is 32x32
+    public static final int GAME_HEIGHT = 22 * TileType.TILE_WIDTH; //Tile size is 32x32
     private Stage gameWindow;
     
+    private Button soundButton;        
+    private ImageView soundOffImageView;
+    private ImageView soundOnImageView;
     
     public static final int MAX_HEALTH = 100; 
     
@@ -66,6 +69,7 @@ public class LeBronQuest extends Application {
     
     private Group gameRoot;
     private Hero hero;
+    private boolean soundIsPlaying;
     
     Tile tileBelowHero;
     Tile tileAboveHero;
@@ -120,11 +124,8 @@ public class LeBronQuest extends Application {
                 gameWindow.initModality(Modality.APPLICATION_MODAL);
                 gameWindow.show();
 
-                
                 startGameLoop();
             }
-
-            
         });
         splashRoot.getChildren().add(startButton);
         //Translate button
@@ -161,6 +162,7 @@ public class LeBronQuest extends Application {
     private Scene createGameScene() {
         gameRoot = new Group();
         Scene scene = new Scene(gameRoot, GAME_WIDTH, GAME_HEIGHT, GAME_BACKGROUND_COLOR);
+        scene.getStylesheets().add("resources/styles.css");
         
         world = new World(gameRoot);
         
@@ -176,10 +178,13 @@ public class LeBronQuest extends Application {
         Media sound = new Media(new File(musicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.play();
+        soundIsPlaying = true;
     }
     
     private void stopSound(){
-        mediaPlayer.stop();
+        soundIsPlaying = false;
+        mediaPlayer.pause();
+        //mediaPlayer.stop();
     }
     
     private void startGameLoop() {
@@ -214,6 +219,8 @@ public class LeBronQuest extends Application {
     
     private void createSprites() {
         
+        
+
         //create hero
         ArrayList<Rectangle2D> heroViewPorts = new ArrayList<>();
         heroViewPorts.add(new Rectangle2D(0, 0, 24, 36));
@@ -222,13 +229,39 @@ public class LeBronQuest extends Application {
         heroViewPorts.add(new Rectangle2D(135, 0, 28, 36));
         heroViewPorts.add(new Rectangle2D(185, 0, 20, 36));
         heroViewPorts.add(new Rectangle2D(232, 0, 19, 36));
+        
+        
 
         hero = new Hero("img/hero.png", true, heroViewPorts, MAX_HEALTH, Direction.RIGHT);
         gameRoot.applyCss();
         gameRoot.layout();
-        hero.setPositionX(Tile.TILE_WIDTH / 2);
-        hero.setPositionY(GAME_HEIGHT - 2 * Tile.TILE_HEIGHT - (int) hero.getImageView().getImage().getHeight());
+        hero.setPositionX(TileType.TILE_WIDTH / 2);
+        hero.setPositionY(GAME_HEIGHT - 2 * TileType.TILE_HEIGHT - (int) hero.getImageView().getImage().getHeight());
         gameRoot.getChildren().add(hero.getImageView());//hero node added to scene graph
+        
+        //sound imageView
+        soundButton = new Button();        
+        soundOffImageView = new ImageView(new Image("img/soundOff.png"));
+        soundOnImageView = new ImageView(new Image("img/soundOn.png"));
+        soundButton.setGraphic(soundOffImageView);
+        
+        soundButton.setTranslateX(GAME_WIDTH - soundOnImageView.getBoundsInParent().getWidth() - 20);
+        soundButton.setTranslateY(GAME_HEIGHT - soundOnImageView.getBoundsInParent().getHeight()- 20);              
+        soundButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                if(soundIsPlaying){
+                    stopSound();                    
+                    soundButton.setGraphic(soundOnImageView);
+                } else {
+                    playSound(GAME_MUSIC_FILE);
+                    soundButton.setGraphic(soundOffImageView);
+                }
+            }
+        });
+        
+        gameRoot.getChildren().add(soundButton);
         /*//create zombies
 
         ArrayList<Rectangle2D> zombieViewPorts = new ArrayList<>();
@@ -264,26 +297,28 @@ public class LeBronQuest extends Application {
         tileBelowToTheLeftOfHero = world.getTileBelowToTheLeft( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
 System.out.println("----------------------");
         //vertically
-        if(tileBelowHero != null && tileBelowHero.isIsSolid() ) {
+        if(tileBelowHero != null && tileBelowHero.getType().isIsSolid() && tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) {
  System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
             if(!hero.isOnGround()){
                 System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW");
                 hero.setOnGround(true);
-                hero.setIsJumping(false);
                 //hero.setAccelerationY(hero.getAccelerationY() - GRAVITY);
                 hero.setAccelerationY(0);
                 hero.setVelocityY(0);
+                hero.setPositionY((float) (tileBelowHero.getImageView().getTranslateY() - hero.getHeight()));
             }
         } else {                    
  System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
             hero.setOnGround(false);
-            hero.setAccelerationY(hero.getAccelerationY() + GRAVITY);
+            //hero.setAccelerationY(hero.getAccelerationY() + GRAVITY);
+            hero.setAccelerationY(GRAVITY);
         }
                 
         //horizontally        
-        if((tileToTheRightOfHero != null && tileToTheRightOfHero.isIsSolid() ) || hero.getPositionX() > LeBronQuest.GAME_WIDTH ){//BLOCK TO  THE RIGHT
+        if((tileToTheRightOfHero != null && tileToTheRightOfHero.getType().isIsSolid() && tileToTheRightOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
+                || hero.getPositionX() > LeBronQuest.GAME_WIDTH ){//BLOCK TO  THE RIGHT
             hero.setIsBlockedToTheRight(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE RIGHT");
             if( hero.getVelocityX() > 0){
@@ -305,7 +340,8 @@ System.out.println("----------------------");
             //hero.setVelocityX(hero.getDesiredVelocityX());
         }
         
-        if((tileToTheLeftOfHero != null && tileToTheLeftOfHero.isIsSolid() ) || hero.getPositionX() < 0 ){ //BLOCK TO  THE LEFT
+        if((tileToTheLeftOfHero != null && tileToTheLeftOfHero.getType().isIsSolid() && tileToTheLeftOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
+                || hero.getPositionX() < 0 ){ //BLOCK TO  THE LEFT
             hero.setIsBlockedToTheLeft(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE LEFT");
             //if( hero.getFacingDirection() == Direction.LEFT){
@@ -328,7 +364,8 @@ System.out.println("----------------------");
             //hero.setVelocityX(hero.getDesiredVelocityX());
         }
         
-        if((tileAboveHero != null && tileAboveHero.isIsSolid() ) || hero.getPositionY() < 0 ){ //BLOCK TO  THE TOP
+        if((tileAboveHero != null && tileAboveHero.getType().isIsSolid() && tileAboveHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
+                 || hero.getPositionY() < 0 ){ //BLOCK TO  THE TOP
             hero.setIsBlockedAbove(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK ABOVE");
             //if( hero.getFacingDirection() == Direction.LEFT){

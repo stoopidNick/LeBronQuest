@@ -15,14 +15,12 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     private float dAccelerationY = 50f;
     private float positionX;
     private float positionY;
+    private float previousPositionX;
+    private float previousPositionY;
     private float velocityX;
     private float velocityY;
     private float accelerationX;    
     private float accelerationY;
-    //private float desiredPositionX;
-    //private float desiredPositionY;    
-    //private float desiredVelocityX;
-    //private float desiredVelocityY;
     private boolean onGround;
     private boolean isBlockedToTheRight;
     private boolean isBlockedToTheLeft;
@@ -41,18 +39,12 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
         this.onGround = false;
         positionX = initialX;
         positionY = initialY;
+        previousPositionX = 0;
+        previousPositionY = 0;
         velocityX = 0;
         velocityY = 0;
         accelerationX = 0;
-        accelerationY = LeBronQuest.GRAVITY;
-//        desiredPositionX = positionX;
-//        desiredPositionY = positionY;
-//        desiredVelocityX = velocityX;
-//        desiredVelocityY = velocityY;
-//System.out.println("CREATED       "+this);      
-//        updatePositionX(initialX);
-//        updatePositionY(initialY);
-        
+        accelerationY = LeBronQuest.GRAVITY;        
     }
     
     public Hero(String imageFile, boolean isVisible,
@@ -63,15 +55,12 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
         this.onGround = false;
         positionX = 0;
         positionY = 0;
+        previousPositionX = 0;
+        previousPositionY = 0;
         velocityX = 0;
         velocityY = 0;
         accelerationX = 0;
         accelerationY = LeBronQuest.GRAVITY;
-//        desiredPositionX = positionX;
-//        desiredPositionY = positionY;
-//        desiredVelocityX = velocityX;
-//        desiredVelocityY = velocityY;
-System.out.println("CREATED       "+this);
     }
 
     
@@ -94,12 +83,20 @@ System.out.println("CREATED       "+this);
         velocityX = accelerationX * dt + velocityX;
         velocityY = accelerationY * dt + velocityY;
         
+        previousPositionX = positionX;
+        previousPositionY = positionY;
         float dt2 = (float) Math.pow(dt, 2);
         positionX = accelerationX * dt2 / 2 + velocityX * dt + positionX;
         positionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;      
         
-        imageView.setTranslateX(positionX);
-        imageView.setTranslateY(positionY);
+        
+        
+        //HERE
+        //imageView.setTranslateX(positionX);
+        //imageView.setTranslateY(positionY);
+        
+        
+        
         
 System.out.println("UPDATED       "+this);
 
@@ -109,6 +106,26 @@ System.out.println("UPDATED       "+this);
             viewportCounter =  (++viewportCounter) % (viewports.size());
             imageView.setViewport(viewports.get(viewportCounter));
         }
+    }
+    //HERE
+    public void setPositionX(float positionX){
+        previousPositionX = this.positionX;
+        this.positionX = positionX;
+        
+    }
+    
+    public void setTranslateX(float translateX){
+        imageView.setTranslateX(translateX);
+        
+    }
+    
+    public void setPositionY(float positionY){
+        previousPositionY = this.positionY;
+        this.positionY = positionY;
+    }
+    
+    public void setTranslateY(float translateY){
+        imageView.setTranslateY(translateY);
     }
     
     @Override
@@ -212,6 +229,13 @@ System.out.println("HAN DO KEY  RE"+this);
 
     }
     
+    public float getDeltaPositionX(){
+        return positionX - previousPositionX;
+    }
+    
+    public float getDeltaPositionY(){
+        return positionY - previousPositionY;
+    }
     
     public float getAccelerationX() {
         return accelerationX;
@@ -290,16 +314,8 @@ System.out.println("HAN DO KEY  RE"+this);
         this.isBlockedAbove = isBlockedAbove;
     }
     
-    public void setPositionX(float translateX){
-        imageView.setTranslateX(translateX);
-        positionX = translateX;
-        
-    }
     
-    public void setPositionY(float translateY){
-        imageView.setTranslateY(translateY);
-        positionY = translateY;
-    }
+    
 
     @Override
     public String toString() {

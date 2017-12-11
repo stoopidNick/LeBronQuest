@@ -50,8 +50,8 @@ public class LeBronQuest extends Application {
     private static final String GAME_TITLE = "Lebron Quest";
     private static final String GAME_MUSIC_FILE = "src/resources/bgm_12.mp3";
     private static final Color GAME_BACKGROUND_COLOR = Color.AQUA;
-    public static final int GAME_WIDTH = 30 * TileType.TILE_WIDTH; //Tile size is 32x32
-    public static final int GAME_HEIGHT = 22 * TileType.TILE_WIDTH; //Tile size is 32x32
+    public static final int SCENE_WIDTH = 30 * TileType.TILE_WIDTH; //Tile size is 32x32
+    public static final int SCENE_HEIGHT = 22 * TileType.TILE_WIDTH; //Tile size is 32x32
     private Stage gameWindow;
     
     private Button soundButton;        
@@ -161,7 +161,7 @@ public class LeBronQuest extends Application {
     
     private Scene createGameScene() {
         gameRoot = new Group();
-        Scene scene = new Scene(gameRoot, GAME_WIDTH, GAME_HEIGHT, GAME_BACKGROUND_COLOR);
+        Scene scene = new Scene(gameRoot, SCENE_WIDTH, SCENE_HEIGHT, GAME_BACKGROUND_COLOR);
         scene.getStylesheets().add("resources/styles.css");
         
         world = new World(gameRoot);
@@ -218,8 +218,6 @@ public class LeBronQuest extends Application {
     }
     
     private void createSprites() {
-        
-        
 
         //create hero
         ArrayList<Rectangle2D> heroViewPorts = new ArrayList<>();
@@ -236,7 +234,10 @@ public class LeBronQuest extends Application {
         gameRoot.applyCss();
         gameRoot.layout();
         hero.setPositionX(TileType.TILE_WIDTH / 2);
-        hero.setPositionY(GAME_HEIGHT - 2 * TileType.TILE_HEIGHT - (int) hero.getImageView().getImage().getHeight());
+        hero.setTranslateX(TileType.TILE_WIDTH / 2);
+        hero.setPositionY(SCENE_HEIGHT - 2 * TileType.TILE_HEIGHT - (int) hero.getImageView().getImage().getHeight());
+        hero.setTranslateY(SCENE_HEIGHT - 2 * TileType.TILE_HEIGHT - (int) hero.getImageView().getImage().getHeight());
+System.out.println("CREATED       "+hero);
         gameRoot.getChildren().add(hero.getImageView());//hero node added to scene graph
         
         //sound imageView
@@ -245,8 +246,8 @@ public class LeBronQuest extends Application {
         soundOnImageView = new ImageView(new Image("img/soundOn.png"));
         soundButton.setGraphic(soundOffImageView);
         
-        soundButton.setTranslateX(GAME_WIDTH - soundOnImageView.getBoundsInParent().getWidth() - 20);
-        soundButton.setTranslateY(GAME_HEIGHT - soundOnImageView.getBoundsInParent().getHeight()- 20);              
+        soundButton.setTranslateX(SCENE_WIDTH - soundOnImageView.getBoundsInParent().getWidth() - 20);
+        soundButton.setTranslateY(SCENE_HEIGHT - soundOnImageView.getBoundsInParent().getHeight()- 20);              
         soundButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -295,8 +296,9 @@ public class LeBronQuest extends Application {
         tileAboveToTheLeftOfHero = world.getTileAboveToTheLeft( hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
         tileBelowToTheRightOfHero = world.getTileBelowToTheRight( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
         tileBelowToTheLeftOfHero = world.getTileBelowToTheLeft( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
-System.out.println("----------------------");
         //vertically
+System.out.println("$$$$$$$$ tileBelowHero: "+ tileBelowHero.getImageView().getTranslateY());
+System.out.println("$$$$$$$$ hero         : "+ hero.getImageView().getTranslateY() + hero.getHealth());
         if(tileBelowHero != null && tileBelowHero.getType().isIsSolid() && tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) {
  System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
@@ -307,6 +309,9 @@ System.out.println("----------------------");
                 hero.setAccelerationY(0);
                 hero.setVelocityY(0);
                 hero.setPositionY((float) (tileBelowHero.getImageView().getTranslateY() - hero.getHeight()));
+                System.out.println("$$$$$$$$ new  hero.getDeltaPositionY(): "+ hero.getDeltaPositionY());
+                //world.setTranslateY(-hero.getDeltaPositionY());
+                //hero.setTranslateY((float) (tileBelowHero.getImageView().getTranslateY() - hero.getHeight()));
             }
         } else {                    
  System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK BELOW");
@@ -318,7 +323,7 @@ System.out.println("----------------------");
                 
         //horizontally        
         if((tileToTheRightOfHero != null && tileToTheRightOfHero.getType().isIsSolid() && tileToTheRightOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
-                || hero.getPositionX() > LeBronQuest.GAME_WIDTH ){//BLOCK TO  THE RIGHT
+                || hero.getPositionX() > world.GAME_WIDTH ){//BLOCK TO  THE RIGHT
             hero.setIsBlockedToTheRight(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE RIGHT");
             if( hero.getVelocityX() > 0){
@@ -399,6 +404,8 @@ System.out.println("UPDATED_FORCES"+hero);
     private void updateSprites(float dt) {
         //animate hero
         hero.update(dt);
+        world.setTranslateX(-hero.getDeltaPositionX());
+        world.setTranslateY(-hero.getDeltaPositionY());
         /*
         //animate zombies
         for (Zombie zombie : zombieArray) {

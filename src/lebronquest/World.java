@@ -19,7 +19,9 @@ import javafx.scene.image.ImageView;
 public class World {
     private static String MAP_FILENAME = "src/resources/map.txt";
     private static int MAP_WIDTH;
-    private static int MAP_HEIGHT;
+    public static int GAME_WIDTH;
+    private static int MAP_HEIGHT;    
+    public static int GAME_HEIGHT;
     private Tile[][] tileMap;
     private static final int NUM_TILE_TYPES = 64;
     private TileType[] tilesTypes = new TileType[NUM_TILE_TYPES];
@@ -64,7 +66,9 @@ public class World {
             Scanner scanner = new Scanner(file);
             
             MAP_WIDTH = scanner.nextInt();
+            GAME_WIDTH = MAP_WIDTH * TileType.TILE_WIDTH;
             MAP_HEIGHT = scanner.nextInt();
+            GAME_HEIGHT = MAP_HEIGHT * TileType.TILE_HEIGHT;
             tileMap = new Tile[MAP_HEIGHT][MAP_WIDTH];
             
             System.out.println("MAP_WIDTH="+MAP_WIDTH);
@@ -84,6 +88,24 @@ public class World {
             scanner.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Missing map file...");
+        }
+    }
+    
+    public void setTranslateX(float XScroll){        
+System.out.println("+++++++++++++++XScrol="+XScroll);
+        for(int row = 0; row < MAP_HEIGHT; row ++){
+            for(int col = 0; col < MAP_WIDTH; col ++){                         
+               tileMap[row][col].getImageView().setTranslateX(tileMap[row][col].getImageView().getTranslateX() + XScroll);//+ XScroll
+            }
+        }
+    }
+    
+    public void setTranslateY(float YScroll){         
+System.out.println("+++++++++++++++YScroll="+YScroll);
+        for(int row = 0; row < MAP_HEIGHT; row ++){
+            for(int col = 0; col < MAP_WIDTH; col ++){                         
+               tileMap[row][col].getImageView().setTranslateY(tileMap[row][col].getImageView().getTranslateY() + YScroll); // + YScroll
+            }
         }
     }
     

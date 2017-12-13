@@ -15,19 +15,25 @@ public class TileType {
     //Images for the tiles should be 32x32
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32; 
-    private boolean isSolid;
+    private boolean isSolidTop;
+    private boolean isSolidBottom;
+    private boolean isSolidLeft;
+    private boolean isSolidRight;
     private Image image;
     private int ID;
 
-    public TileType(String filename, boolean isSolid, int ID) {
+    
+    public TileType(String filename, boolean isSolidTop, boolean isSolidBottom, boolean isSolidLeft, boolean isSolidRight, int ID) {
         image = new Image(filename);
-        this.isSolid = isSolid;
+        this.isSolidTop = isSolidTop;
+        this.isSolidBottom = isSolidBottom;
+        this.isSolidLeft = isSolidLeft;
+        this.isSolidRight = isSolidRight;
         this.ID = ID;
     }
+    
 
-    public boolean isIsSolid() {
-        return isSolid;
-    }
+    
 
     public Image getImage() {
         return image;
@@ -37,9 +43,39 @@ public class TileType {
         return ID;
     }
 
-    public void setIsSolid(boolean isSolid) {
-        this.isSolid = isSolid;
+    public boolean isIsSolidTop() {
+        return isSolidTop;
     }
+
+    public void setIsSolidTop(boolean isSolidTop) {
+        this.isSolidTop = isSolidTop;
+    }
+
+    public boolean isIsSolidBottom() {
+        return isSolidBottom;
+    }
+
+    public void setIsSolidBottom(boolean isSolidBottom) {
+        this.isSolidBottom = isSolidBottom;
+    }
+
+    public boolean isIsSolidLeft() {
+        return isSolidLeft;
+    }
+
+    public void setIsSolidLeft(boolean isSolidLeft) {
+        this.isSolidLeft = isSolidLeft;
+    }
+
+    public boolean isIsSolidRight() {
+        return isSolidRight;
+    }
+
+    public void setIsSolidRight(boolean isSolidRight) {
+        this.isSolidRight = isSolidRight;
+    }
+
+    
 
     public void setImage(Image image) {
         this.image = image;
@@ -47,8 +83,10 @@ public class TileType {
 
     @Override
     public String toString() {
-        return "TileType{" + "isSolid=" + isSolid + ", image=" + image + ", ID=" + ID + '}';
+        return "TileType{" + "isSolidTop=" + isSolidTop + ", isSolidBottom=" + isSolidBottom + ", isSolidLeft=" + isSolidLeft + ", isSolidRight=" + isSolidRight + ", image=" + image + ", ID=" + ID + '}';
     }
+
+    
     
     
     

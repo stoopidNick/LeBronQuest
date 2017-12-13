@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
@@ -17,15 +16,15 @@ import javafx.scene.image.ImageView;
  * @author transflorida
  */
 public class World {
-    private static String MAP_FILENAME = "src/resources/map.txt";
+    private static final String MAP_FILENAME = "src/resources/map.txt";
     private static int MAP_WIDTH;
     public static int GAME_WIDTH;
     private static int MAP_HEIGHT;    
     public static int GAME_HEIGHT;
     private Tile[][] tileMap;
     private static final int NUM_TILE_TYPES = 64;
-    private TileType[] tilesTypes = new TileType[NUM_TILE_TYPES];
-    private Group root;
+    private static final TileType[] tilesTypes = new TileType[NUM_TILE_TYPES];
+    private final Group root;
     
 
     public World(Group root) {
@@ -37,27 +36,46 @@ public class World {
 
     private void createTiles() {
         for(int i = 0; i < NUM_TILE_TYPES; i++){
-           tilesTypes[i] = new TileType("img/tiles/tile_"+i+".png", true, i); 
+           tilesTypes[i] = new TileType("img/tiles/tile_"+i+".png", true, false, false, false, i); 
         }
-
-
-        tilesTypes[8].setIsSolid(false);
-        tilesTypes[12].setIsSolid(false);
-        tilesTypes[28].setIsSolid(false);
-        tilesTypes[37].setIsSolid(false);
-        tilesTypes[38].setIsSolid(false);
-        tilesTypes[39].setIsSolid(false);
-        tilesTypes[40].setIsSolid(false);
-        tilesTypes[41].setIsSolid(false);
-        tilesTypes[42].setIsSolid(false);
-        tilesTypes[43].setIsSolid(false);
-        tilesTypes[44].setIsSolid(false);
-        tilesTypes[45].setIsSolid(false);
-        tilesTypes[46].setIsSolid(false);
-        tilesTypes[50].setIsSolid(false);
-        tilesTypes[51].setIsSolid(false);
-        tilesTypes[54].setIsSolid(false);
-        tilesTypes[55].setIsSolid(false);
+        
+        //tilesTypes[1].setIsSolidRight(true);
+        //tilesTypes[2].setIsSolidLeft(true);
+        //tilesTypes[3].setIsSolidLeft(true);
+        //tilesTypes[3].setIsSolidTop(false);
+        //tilesTypes[4].setIsSolidTop(false);
+        //tilesTypes[5].setIsSolidRight(true);
+        //tilesTypes[5].setIsSolidTop(false); 
+        tilesTypes[6].setIsSolidLeft(true);
+        tilesTypes[6].setIsSolidRight(true);
+        tilesTypes[6].setIsSolidBottom(true);
+        //tilesTypes[8].setIsSolidBottom(true); 
+        //tilesTypes[8].setIsSolidLeft(true); 
+        //tilesTypes[8].setIsSolidTop(false);
+        //tilesTypes[9].setIsSolidTop(false); 
+        //tilesTypes[9].setIsSolidBottom(true); 
+        //tilesTypes[10].setIsSolidTop(false);
+        //tilesTypes[10].setIsSolidRight(true);
+        //tilesTypes[11].setIsSolidTop(false);
+        //tilesTypes[12].setIsSolidBottom(false);        
+        //tilesTypes[12].setIsSolidRight(false);
+        
+        tilesTypes[12].setIsSolidTop(false);
+        tilesTypes[28].setIsSolidTop(false);
+        tilesTypes[37].setIsSolidTop(false);
+        tilesTypes[38].setIsSolidTop(false);
+        tilesTypes[39].setIsSolidTop(false);
+        tilesTypes[40].setIsSolidTop(false);
+        tilesTypes[41].setIsSolidTop(false);
+        tilesTypes[42].setIsSolidTop(false);
+        tilesTypes[43].setIsSolidTop(false);
+        tilesTypes[44].setIsSolidTop(false);
+        tilesTypes[45].setIsSolidTop(false);
+        tilesTypes[46].setIsSolidTop(false);
+        tilesTypes[50].setIsSolidTop(false);
+        tilesTypes[51].setIsSolidTop(false);
+        tilesTypes[54].setIsSolidTop(false);
+        tilesTypes[55].setIsSolidTop(false);
     }
 
     private void readMap() {
@@ -70,9 +88,7 @@ public class World {
             MAP_HEIGHT = scanner.nextInt();
             GAME_HEIGHT = MAP_HEIGHT * TileType.TILE_HEIGHT;
             tileMap = new Tile[MAP_HEIGHT][MAP_WIDTH];
-            
-            System.out.println("MAP_WIDTH="+MAP_WIDTH);
-            System.out.println("MAP_HEIGHT="+MAP_HEIGHT);
+
 
             for(int row = 0; row < MAP_HEIGHT; row ++){
                 for(int col = 0; col < MAP_WIDTH; col ++){
@@ -81,7 +97,7 @@ public class World {
                    imageView.setTranslateX(col * TileType.TILE_WIDTH);
                    imageView.setTranslateY(row * TileType.TILE_HEIGHT);
                    root.getChildren().add(imageView);
-                   tileMap[row][col] = new Tile(imageView, tilesTypes[intType]);
+                   tileMap[row][col] = new Tile(imageView, tilesTypes[intType], row, col);
                 }
             }
             
@@ -91,8 +107,7 @@ public class World {
         }
     }
     
-    public void setTranslateX(float XScroll){        
-System.out.println("+++++++++++++++XScrol="+XScroll);
+    public void translateX(float XScroll){       
         for(int row = 0; row < MAP_HEIGHT; row ++){
             for(int col = 0; col < MAP_WIDTH; col ++){                         
                tileMap[row][col].getImageView().setTranslateX(tileMap[row][col].getImageView().getTranslateX() + XScroll);//+ XScroll
@@ -100,8 +115,7 @@ System.out.println("+++++++++++++++XScrol="+XScroll);
         }
     }
     
-    public void setTranslateY(float YScroll){         
-System.out.println("+++++++++++++++YScroll="+YScroll);
+    public void translateY(float YScroll){         
         for(int row = 0; row < MAP_HEIGHT; row ++){
             for(int col = 0; col < MAP_WIDTH; col ++){                         
                tileMap[row][col].getImageView().setTranslateY(tileMap[row][col].getImageView().getTranslateY() + YScroll); // + YScroll
@@ -118,12 +132,11 @@ System.out.println("+++++++++++++++YScroll="+YScroll);
         }
     }
 
-
-    int getXCoordinate(float positionX,float width){
+    int getXCoordinate(float positionX, float width){
         return (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
     }
     
-    int getYCoordinate(float positionY,float height){
+    int getYCoordinate(float positionY, float height){
         return (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
     }
     
@@ -146,8 +159,6 @@ System.out.println("+++++++++++++++YScroll="+YScroll);
     Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
-//System.out.println("    positionX=" + positionX+", positionY="+ positionY+ "width=" + width + "height=" + height );
-//System.out.println("    col=" + (col+1)+", row="+ row+ "solid: " + tiles[map[row][col + 1]].isIsSolid());
         if (row >= 0 && row < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
             return tileMap[row][col + 1];
         else return null;

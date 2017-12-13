@@ -5,14 +5,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import static lebronquest.LeBronQuest.GRAVITY;
 
 
 public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     private int health;   
     public Direction facingDirection;
-    private float dAccelerationX = 0.8f;    
-    private float dAccelerationY = 50f;
+    private static final float dAccelerationX = 0.8f;    
+    private static final float dAccelerationY = 50f;
     private float positionX;
     private float positionY;
     private float previousPositionX;
@@ -28,6 +27,8 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
+    private boolean upKeyPressed = false;
+    private boolean downKeyPressed = false;
     
   
 
@@ -87,19 +88,9 @@ public class Hero extends Sprite  implements EventHandler<KeyEvent>{
         previousPositionY = positionY;
         float dt2 = (float) Math.pow(dt, 2);
         positionX = accelerationX * dt2 / 2 + velocityX * dt + positionX;
-        positionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;      
+        positionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;   
+System.out.println("*****************new Hero Position Y="+positionY);
         
-        
-        
-        //HERE
-        //imageView.setTranslateX(positionX);
-        //imageView.setTranslateY(positionY);
-        
-        
-        
-        
-System.out.println("UPDATED       "+this);
-
         //animating hero
         //if(desiredVelocityX != 0){
         if(leftKeyPressed || rightKeyPressed){
@@ -122,6 +113,7 @@ System.out.println("UPDATED       "+this);
     public void setPositionY(float positionY){
         previousPositionY = this.positionY;
         this.positionY = positionY;
+System.out.println("*****************new Hero Position Y (because of block)="+positionY);
     }
     
     public void setTranslateY(float translateY){
@@ -157,8 +149,8 @@ System.out.println("      rightKeyPressed="+rightKeyPressed);
                 imageView.setScaleX(1);//flips the image
                 facingDirection = Direction.RIGHT;
 System.out.println("HAN RGT KEY  PR"+this);
-            } else if(event.getCode() == KeyCode.UP){
-
+            } else if(event.getCode() == KeyCode.UP && !upKeyPressed){
+                upKeyPressed = true;
                 //facingDirection = Direction.UP;
 
 System.out.println("onGround?"+onGround);
@@ -166,7 +158,8 @@ System.out.println("onGround?"+onGround);
                     accelerationY -= dAccelerationY;
                 }
 System.out.println("HAND UP KEY PR"+this);
-            } else if(event.getCode() == KeyCode.DOWN){
+            } else if(event.getCode() == KeyCode.DOWN && !downKeyPressed){
+                downKeyPressed = true;
                 facingDirection = Direction.DOWN;
                 //velocityY = velocityY + speed;
 System.out.println("HAND DO KEY PR"+this);
@@ -198,19 +191,20 @@ System.out.println("HAND SP KEY PR"+this);
                 leftKeyPressed = false;
 System.out.println("      leftKeyPressed="+leftKeyPressed);
                 //velocityX = velocityX + speed;
-                if( !isBlockedToTheLeft){
+                if(accelerationX < 0){
                     accelerationX += dAccelerationX;
                 }
 System.out.println("HAN LFT KEY  RE"+this);
             } else if(event.getCode() == KeyCode.RIGHT ){
                 rightKeyPressed = false;
 System.out.println("      rightKeyPressed="+rightKeyPressed);
-                if(!isBlockedToTheRight){
+                if(accelerationX > 0){
                 //velocityX = velocityX - speed;
                     accelerationX -= dAccelerationX;
                 }
 System.out.println("HAN RGT KEY  RE"+this);
             }else if(event.getCode() == KeyCode.UP){
+                upKeyPressed = false;
 //System.out.println("jumping?"+onGround);
 //                if(onGround){
 //                    setAccelerationY(getAccelerationY() + GRAVITY);
@@ -219,6 +213,7 @@ System.out.println("HAN RGT KEY  RE"+this);
 //                velocityY = 0;
 System.out.println("HAN UP KEY  RE"+this);
             } else if(event.getCode() == KeyCode.DOWN){
+                downKeyPressed = false;
                 //velocityY = velocityY - speed;
                 //velocityY = 0;
 System.out.println("HAN DO KEY  RE"+this);

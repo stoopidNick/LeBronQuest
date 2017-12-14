@@ -191,7 +191,7 @@ public class LeBronQuest extends Application implements EventHandler<KeyEvent> {
                 } else {
                     isYScrolling = true;
                 }
-
+System.out.println("^^^^^^^^  isYScrolling=" + isYScrolling + ",isXScrolling=" + isXScrolling);
                 updateForcesOnHero();
 
                 updateSprites(dt);
@@ -215,12 +215,12 @@ public class LeBronQuest extends Application implements EventHandler<KeyEvent> {
 
         //create hero
         ArrayList<Rectangle2D> heroViewPorts = new ArrayList<>();
-        heroViewPorts.add(new Rectangle2D(0, 0, 24, 36));
-        heroViewPorts.add(new Rectangle2D(47, 0, 21, 36));
-        heroViewPorts.add(new Rectangle2D(93, 0, 19, 36));
+        heroViewPorts.add(new Rectangle2D(0, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(47, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(93, 0, 28, 36));
         heroViewPorts.add(new Rectangle2D(135, 0, 28, 36));
-        heroViewPorts.add(new Rectangle2D(185, 0, 20, 36));
-        heroViewPorts.add(new Rectangle2D(232, 0, 19, 36));
+        heroViewPorts.add(new Rectangle2D(185, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(232, 0, 28, 36));
 
         hero = new Hero("img/hero.png", true, heroViewPorts, MAX_HEALTH, Direction.RIGHT);
         gameRoot.applyCss();
@@ -289,27 +289,36 @@ public class LeBronQuest extends Application implements EventHandler<KeyEvent> {
         Tile tileBelowToTheRightOfHero = world.getTileBelowToTheRight(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
         Tile tileBelowToTheLeftOfHero = world.getTileBelowToTheLeft(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
         //vertically
-        System.out.println("$$$$$$$$ tileBelowHero: " + tileBelowHero + ", " + tileBelowHero.getImageView().getTranslateY() + ", bounds" + tileBelowHero.getImageView().getBoundsInParent());
-        System.out.println("$$$$$$$$ bottom hero:   " + (hero.getImageView().getTranslateY() + hero.getWidth()) + ", bounds" + hero.getImageView().getBoundsInParent());
-        System.out.println("$$$$$$$$ intersects:   " + tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()));
+        if (tileBelowHero != null) System.out.println("$$$$$$$$ tileBelowHero: " + tileBelowHero + ", " + tileBelowHero.getImageView().getTranslateY() + ", bounds" + tileBelowHero.getImageView().getBoundsInParent());
+//        System.out.println("$$$$$$$$ bottom hero:   " + (hero.getImageView().getTranslateY() + hero.getWidth()) + ", bounds" + hero.getImageView().getBoundsInParent());
+//        System.out.println("$$$$$$$$ intersects:   " + tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()));
 
         if (tileBelowHero != null && tileBelowHero.getType().isIsSolidTop() && tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) {
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
             if (!hero.isOnGround()) {
-                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW, isYScrolling=" + isYScrolling + ",isXScrolling=" + isXScrolling);
+                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW" );
                 hero.setOnGround(true);
                 //hero.setAccelerationY(hero.getAccelerationY() - GRAVITY);
                 hero.setAccelerationY(0);
                 hero.setVelocityY(0);
-                hero.setPositionY((float) (tileBelowHero.getImageView().getTranslateY() - hero.getHeight() + 2));
-                System.out.println("$$$$$$$$ new  hero.getDeltaPositionY(): " + hero.getDeltaPositionY());
+                double deltaTranslateY = hero.getImageView().getTranslateY() - (tileBelowHero.getImageView().getTranslateY() - hero.getHeight() + 1);
+//                System.out.println("$$$$$$$$ hero.getImageView().getTranslateY(): " + hero.getImageView().getTranslateY());
+//                System.out.println("$$$$$$$$ tileBelowHero.getImageView().getTranslateY(): " + tileBelowHero.getImageView().getTranslateY());
+//                System.out.println("$$$$$$$$ -hero.getHeight(): " + hero.getHeight());
+//                System.out.println("$$$$$$$$ deltaTranslateY " + deltaTranslateY);
                 //Here
                 if (isYScrolling) {
-                    //world.translateY(-hero.getDeltaPositionY());
+                    world.translateY((float)deltaTranslateY);
+                    //world.translateY(-(float) (hero.getImageView().getTranslateY() + hero.getDeltaPositionY()));
                 } else {
-                    hero.setTranslateY((float) (hero.getImageView().getTranslateY() + hero.getDeltaPositionY()));
+                    hero.setTranslateY( -(float) hero.getImageView().getTranslateY() - (float) deltaTranslateY);
                 }
+                hero.setPositionY(  hero.getPositionY() -  (float) deltaTranslateY);
+                
+//                    System.out.println("$$$$$$$$ >>>tileBelowHero.getTranslateY " +  tileBelowHero.getImageView().getTranslateY());
+//                    System.out.println("$$$$$$$$ >>hero.getTranslateY " +  hero.getImageView().getTranslateY());
+//                
             }
         } else {
             System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK BELOW");
@@ -321,7 +330,7 @@ public class LeBronQuest extends Application implements EventHandler<KeyEvent> {
 
         //horizontally        
         if ((tileToTheRightOfHero != null && tileToTheRightOfHero.getType().isIsSolidLeft() && tileToTheRightOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()))
-                || hero.getPositionX() > world.GAME_WIDTH) {//BLOCK TO  THE RIGHT
+                || hero.getPositionX() > (world.GAME_WIDTH - hero.width)) {//BLOCK TO  THE RIGHT
             hero.setIsBlockedToTheRight(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE RIGHT");
             if (hero.getVelocityX() > 0) {
@@ -407,10 +416,11 @@ public class LeBronQuest extends Application implements EventHandler<KeyEvent> {
             hero.setTranslateX((float) (hero.getImageView().getTranslateX() + hero.getDeltaPositionX()));
         }
         if (isYScrolling) {
+            //world.translateY(-(float) (hero.getImageView().getTranslateY() + hero.getDeltaPositionY()));
             world.translateY(-hero.getDeltaPositionY());
-        } else {
+       } else {
             hero.setTranslateY((float) (hero.getImageView().getTranslateY() + hero.getDeltaPositionY()));
-        }
+      }
         System.out.println("UPDATED       " + hero);
         /*
         //animate zombies

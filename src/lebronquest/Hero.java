@@ -16,8 +16,6 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
     private float positionY;
     private float previousPositionX;
     private float previousPositionY;
-    private float previousTranslateX;
-    private float previousTranslateY;
     private float velocityX;
     private float velocityY;
     private float accelerationX;
@@ -106,7 +104,6 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
     }
 
     public void setTranslateX(float translateX) {
-        previousTranslateX = (float) imageView.getTranslateX();
         imageView.setTranslateX(translateX);
 
     }
@@ -118,7 +115,6 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
     }
 
     public void setTranslateY(float translateY) {
-        previousTranslateY = (float) imageView.getTranslateY();
         imageView.setTranslateY(translateY);
     }
 
@@ -231,13 +227,7 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
         return positionY - previousPositionY;
     }
     
-    public float getDeltaTranslateY() {
-        return (float) imageView.getTranslateY() - previousTranslateY;
-    }
     
-    public float getDeltaTranslateX() {
-        return (float) imageView.getTranslateX() - previousTranslateX;
-    }
 
     public float getAccelerationX() {
         return accelerationX;

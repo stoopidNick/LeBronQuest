@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -30,11 +32,12 @@ import javafx.util.Duration;
  *
  * @author nicot
  */
-public class LeBronQuest extends Application {
+public class LeBronQuest extends Application implements EventHandler<KeyEvent> {
+
     public static final float GRAVITY = 3;
-    
+
     private static final int FRAMES_PER_SECOND = 20;//20
-    
+
     private static final String SPLASH_ICON = "img/icon.png";
     private static final String SPLASH_TITLE = "Lebron Quest";
     private static final String SPLASH_IMAGE = "img/lbj simple.png";
@@ -43,8 +46,7 @@ public class LeBronQuest extends Application {
     private static final int SPLASH_WIDTH = 720;
     private static final int SPLASH_HEIGHT = 550;
     private Stage splashWindow;
-    
-    
+
     private static final String GAME_ICON = "img/icon.png";
     private static final String GAME_TITLE = "Lebron Quest";
     private static final String GAME_MUSIC_FILE = "src/resources/bgm_12.mp3";
@@ -52,73 +54,61 @@ public class LeBronQuest extends Application {
     public static final int SCENE_WIDTH = 30 * TileType.TILE_WIDTH; //Tile size is 32x32
     public static final int SCENE_HEIGHT = 22 * TileType.TILE_WIDTH; //Tile size is 32x32
     private Stage gameWindow;
-    
-    private Button soundButton;        
+
+    private Button soundButton;
     private ImageView soundOffImageView;
     private ImageView soundOnImageView;
-    
-    public static final int MAX_HEALTH = 100; 
-    
+
+    public static final int MAX_HEALTH = 100;
+
     private MediaPlayer mediaPlayer;
-    
+
     private static boolean gameWon = false;
     private static boolean gameLost = false;
-    
+
     private World world;
-    
+
     private Group gameRoot;
     private Hero hero;
     private boolean soundIsPlaying;
-    
+
     private boolean isXScrolling = false;
     private boolean isYScrolling = false;
-  
 
     @Override
     public void start(Stage primaryStage) {
-        
+
         splashWindow = primaryStage;
-        
+
         Scene splashScene = createSplashScene();
-        
+
+        splashScene.setOnKeyPressed(this);
+        splashScene.setOnKeyReleased(this);
+
         playSound(INTRO_MUSIC_FILE);
-        
+
         splashWindow.setTitle(SPLASH_TITLE);
         splashWindow.setScene(splashScene);
         splashWindow.getIcons().add(new Image(SPLASH_ICON));
         splashWindow.show();
     }
-    
-    private Scene createSplashScene(){
-        
+
+    private Scene createSplashScene() {
+
         Group splashRoot = new Group();
-        Scene scene = new Scene(splashRoot, SPLASH_WIDTH, SPLASH_HEIGHT);     
-        
+        Scene scene = new Scene(splashRoot, SPLASH_WIDTH, SPLASH_HEIGHT);
+
         //Add Button
         Button startButton = new Button();
         startButton.setText(SPLASH_BUTTON_TEXT);
         startButton.setOnAction(new EventHandler<ActionEvent>() {
-            
+
             @Override
             public void handle(ActionEvent event) {
-                
-                splashWindow.hide();
-                stopSound();
-                
-                gameWindow = new Stage();
-                
-                Scene gameScene = createGameScene();
-        
-                playSound(GAME_MUSIC_FILE);
-                
-                gameWindow.setTitle(GAME_TITLE);
-                gameWindow.setScene(gameScene);
-                gameWindow.getIcons().add(new Image(GAME_ICON));
-                gameWindow.initModality(Modality.APPLICATION_MODAL);
-                gameWindow.show();
 
-                startGameLoop();
+                startGame();
             }
+
         });
         splashRoot.getChildren().add(startButton);
         //Translate button
@@ -139,47 +129,47 @@ public class LeBronQuest extends Application {
         layout occurs (as in your case), then you need to manually trigger the 
         CSS application and layout pass before you try to query the height and
         width extents of the node.
-        */
+         */
         splashRoot.applyCss();
         splashRoot.layout();
         startButton.setTranslateX(SPLASH_WIDTH / 2 - startButton.getWidth() / 2);
         startButton.setTranslateY(SPLASH_HEIGHT - startButton.getHeight() - 5);
-        
+
         //Add image
         ImageView splash = new ImageView(new Image(SPLASH_IMAGE));
         splashRoot.getChildren().add(splash);
-        
+
         return scene;
     }
-    
+
     private Scene createGameScene() {
         gameRoot = new Group();
         Scene scene = new Scene(gameRoot, SCENE_WIDTH, SCENE_HEIGHT, GAME_BACKGROUND_COLOR);
         scene.getStylesheets().add("resources/styles.css");
-        
+
         world = new World(gameRoot);
-        
+
         createSprites();
-        
+
         scene.setOnKeyPressed(hero);
         scene.setOnKeyReleased(hero);
-                
+
         return scene;
     }
-    
-    private void playSound(String musicFile){          
+
+    private void playSound(String musicFile) {
         Media sound = new Media(new File(musicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.play();
         soundIsPlaying = true;
     }
-    
-    private void stopSound(){
+
+    private void stopSound() {
         soundIsPlaying = false;
         mediaPlayer.pause();
         //mediaPlayer.stop();
     }
-    
+
     private void startGameLoop() {
         //game loop
         Timeline timeline = new Timeline();
@@ -190,18 +180,20 @@ public class LeBronQuest extends Application {
         EventHandler onFinished = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                
-                if(hero.getPositionX() < (SCENE_WIDTH / 2) || hero.getPositionX() > (World.GAME_WIDTH -  SCENE_WIDTH / 2))
+
+                if (hero.getPositionX() < (SCENE_WIDTH / 2) || hero.getPositionX() > (World.GAME_WIDTH - SCENE_WIDTH / 2)) {
                     isXScrolling = false;
-                else 
+                } else {
                     isXScrolling = true;
-                if(hero.getPositionY() < (SCENE_HEIGHT / 2) || hero.getPositionY() > (World.GAME_HEIGHT -  SCENE_HEIGHT / 2))
+                }
+                if (hero.getPositionY() < (SCENE_HEIGHT / 2) || hero.getPositionY() > (World.GAME_HEIGHT - SCENE_HEIGHT / 2)) {
                     isYScrolling = false;
-                else 
+                } else {
                     isYScrolling = true;
-                
-                updateForcesOnHero();           
-        
+                }
+
+                updateForcesOnHero();
+
                 updateSprites(dt);
 
                 handleCollisions();
@@ -218,7 +210,7 @@ public class LeBronQuest extends Application {
         timeline.getKeyFrames().add(keyframe);
         timeline.play();
     }
-    
+
     private void createSprites() {
 
         //create hero
@@ -229,33 +221,31 @@ public class LeBronQuest extends Application {
         heroViewPorts.add(new Rectangle2D(135, 0, 28, 36));
         heroViewPorts.add(new Rectangle2D(185, 0, 20, 36));
         heroViewPorts.add(new Rectangle2D(232, 0, 19, 36));
-        
-        
 
         hero = new Hero("img/hero.png", true, heroViewPorts, MAX_HEALTH, Direction.RIGHT);
         gameRoot.applyCss();
         gameRoot.layout();
-        hero.setPositionX(28 * TileType.TILE_WIDTH /2);
+        hero.setPositionX(28 * TileType.TILE_WIDTH / 2);
         hero.setTranslateX(28 * TileType.TILE_WIDTH / 2);
-        hero.setPositionY(SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT - (int) hero.getHeight() );
-        hero.setTranslateY(SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT - (int) hero.getHeight() );
-System.out.println("CREATED       "+hero);
+        hero.setPositionY(SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT - (int) hero.getHeight());
+        hero.setTranslateY(SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT - (int) hero.getHeight());
+        System.out.println("CREATED       " + hero);
         gameRoot.getChildren().add(hero.getImageView());//hero node added to scene graph
-        
+
         //sound imageView
-        soundButton = new Button();        
+        soundButton = new Button();
         soundOffImageView = new ImageView(new Image("img/soundOff.png"));
         soundOnImageView = new ImageView(new Image("img/soundOn.png"));
         soundButton.setGraphic(soundOffImageView);
-        
+
         soundButton.setTranslateX(SCENE_WIDTH - soundOnImageView.getBoundsInParent().getWidth() - 20);
-        soundButton.setTranslateY(SCENE_HEIGHT - soundOnImageView.getBoundsInParent().getHeight()- 20);              
+        soundButton.setTranslateY(SCENE_HEIGHT - soundOnImageView.getBoundsInParent().getHeight() - 20);
         soundButton.setOnAction(new EventHandler<ActionEvent>() {
-            
+
             @Override
             public void handle(ActionEvent event) {
-                if(soundIsPlaying){
-                    stopSound();                    
+                if (soundIsPlaying) {
+                    stopSound();
                     soundButton.setGraphic(soundOnImageView);
                 } else {
                     playSound(GAME_MUSIC_FILE);
@@ -263,7 +253,7 @@ System.out.println("CREATED       "+hero);
                 }
             }
         });
-        
+
         gameRoot.getChildren().add(soundButton);
         /*//create zombies
 
@@ -285,86 +275,89 @@ System.out.println("CREATED       "+hero);
         }
         
         
-        */
+         */
 
     }
- 
-    private void updateForcesOnHero() {
-        Tile tileBelowHero = world.getTileBelow( hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
-        Tile tileAboveHero = world.getTileAbove( hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
-        Tile tileToTheRightOfHero = world.getTileToTheRight( hero.getPositionX(), hero.getPositionY(),   hero.getWidth(), hero.getHeight());
-        Tile tileToTheLeftOfHero = world.getTileToTheLeft( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
-        Tile tileAboveToTheRightOfHero = world.getTileAboveToTheRight( hero.getPositionX(), hero.getPositionY(),   hero.getWidth(), hero.getHeight());
-        Tile tileAboveToTheLeftOfHero = world.getTileAboveToTheLeft( hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
-        Tile tileBelowToTheRightOfHero = world.getTileBelowToTheRight( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
-        Tile tileBelowToTheLeftOfHero = world.getTileBelowToTheLeft( hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
-        //vertically
-System.out.println("$$$$$$$$ tileBelowHero: "+ tileBelowHero + ", " +tileBelowHero.getImageView().getTranslateY()+", bounds"+tileBelowHero.getImageView().getBoundsInParent());
-System.out.println("$$$$$$$$ bottom hero:   "+ (hero.getImageView().getTranslateY() + hero.getWidth())+ ", bounds"+hero.getImageView().getBoundsInParent());
-System.out.println("$$$$$$$$ intersects:   "+ tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()));
 
-        if(tileBelowHero != null && tileBelowHero.getType().isIsSolidTop() && tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) {
- System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
+    private void updateForcesOnHero() {
+        Tile tileBelowHero = world.getTileBelow(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileAboveHero = world.getTileAbove(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileToTheRightOfHero = world.getTileToTheRight(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileToTheLeftOfHero = world.getTileToTheLeft(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileAboveToTheRightOfHero = world.getTileAboveToTheRight(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileAboveToTheLeftOfHero = world.getTileAboveToTheLeft(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileBelowToTheRightOfHero = world.getTileBelowToTheRight(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        Tile tileBelowToTheLeftOfHero = world.getTileBelowToTheLeft(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
+        //vertically
+        System.out.println("$$$$$$$$ tileBelowHero: " + tileBelowHero + ", " + tileBelowHero.getImageView().getTranslateY() + ", bounds" + tileBelowHero.getImageView().getBoundsInParent());
+        System.out.println("$$$$$$$$ bottom hero:   " + (hero.getImageView().getTranslateY() + hero.getWidth()) + ", bounds" + hero.getImageView().getBoundsInParent());
+        System.out.println("$$$$$$$$ intersects:   " + tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()));
+
+        if (tileBelowHero != null && tileBelowHero.getType().isIsSolidTop() && tileBelowHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) {
+            System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
-            if(!hero.isOnGround()){
-                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW, isYScrolling="+isYScrolling+",isXScrolling="+isXScrolling);
+            if (!hero.isOnGround()) {
+                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW, isYScrolling=" + isYScrolling + ",isXScrolling=" + isXScrolling);
                 hero.setOnGround(true);
                 //hero.setAccelerationY(hero.getAccelerationY() - GRAVITY);
                 hero.setAccelerationY(0);
                 hero.setVelocityY(0);
                 hero.setPositionY((float) (tileBelowHero.getImageView().getTranslateY() - hero.getHeight() + 2));
-                System.out.println("$$$$$$$$ new  hero.getDeltaPositionY(): "+ hero.getDeltaPositionY());
-                if(isXScrolling){
-                    world.translateY(-hero.getDeltaPositionY());
+                System.out.println("$$$$$$$$ new  hero.getDeltaPositionY(): " + hero.getDeltaPositionY());
+                //Here
+                if (isYScrolling) {
+                    //world.translateY(-hero.getDeltaPositionY());
                 } else {
                     hero.setTranslateY((float) (hero.getImageView().getTranslateY() + hero.getDeltaPositionY()));
                 }
             }
-        } else {                    
- System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK BELOW");
+        } else {
+            System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
             hero.setOnGround(false);
             //hero.setAccelerationY(hero.getAccelerationY() + GRAVITY);
             hero.setAccelerationY(GRAVITY);
         }
-                
+
         //horizontally        
-        if((tileToTheRightOfHero != null && tileToTheRightOfHero.getType().isIsSolidLeft() && tileToTheRightOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
-                || hero.getPositionX() > world.GAME_WIDTH ){//BLOCK TO  THE RIGHT
+        if ((tileToTheRightOfHero != null && tileToTheRightOfHero.getType().isIsSolidLeft() && tileToTheRightOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()))
+                || hero.getPositionX() > world.GAME_WIDTH) {//BLOCK TO  THE RIGHT
             hero.setIsBlockedToTheRight(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE RIGHT");
-            if( hero.getVelocityX() > 0){
+            if (hero.getVelocityX() > 0) {
                 System.out.println("$$$$$$$$$$$$$$$$$$ COLLISION TO  THE RIGHT");
-           // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
+                // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
                 hero.setVelocityX(0);
                 hero.setAccelerationX(0);
-            //}
-            
-            } /*else {
+                //}
+
+            }
+            /*else {
                 System.out.println("$$$$$$$$$$$$$$$$$$ NO COLLISION TO  THE RIGHT");
                 hero.updatePositionX(hero.getDesiredPositionX());
                 hero.setVelocityX(hero.getDesiredVelocityX());
             }*/
-        }  else { // NO  BLOCK TO  THE RIGHT
+        } else { // NO  BLOCK TO  THE RIGHT
             System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK TO  THE RIGHT ");
             hero.setIsBlockedToTheRight(false);
             //hero.updatePositionX(hero.getDesiredPositionX());
             //hero.setVelocityX(hero.getDesiredVelocityX());
         }
-        
-        if((tileToTheLeftOfHero != null && tileToTheLeftOfHero.getType().isIsSolidRight() && tileToTheLeftOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
-                || hero.getPositionX() < 0 ){ //BLOCK TO  THE LEFT
+
+        if ((tileToTheLeftOfHero != null && tileToTheLeftOfHero.getType().isIsSolidRight() && tileToTheLeftOfHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()))
+                || hero.getPositionX() < 0) { //BLOCK TO  THE LEFT
             hero.setIsBlockedToTheLeft(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK TO  THE LEFT");
             //if( hero.getFacingDirection() == Direction.LEFT){
-            if( hero.getVelocityX() < 0){
+            if (hero.getVelocityX() < 0) {
                 System.out.println("$$$$$$$$$$$$$$$$$$ COLLISION TO  THE LEFT");
-           // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
+                // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
                 hero.setVelocityX(0);
                 hero.setAccelerationX(0);
-            //}
-            
-            } /*else {
+                //}
+
+            }
+            /*else {
                 System.out.println("$$$$$$$$$$$$$$$$$$ NO COLLISION TO  THE LEFT");
                 hero.updatePositionX(hero.getDesiredPositionX());
                 hero.setVelocityX(hero.getDesiredVelocityX());
@@ -375,20 +368,21 @@ System.out.println("$$$$$$$$ intersects:   "+ tileBelowHero.getImageView().getBo
             //hero.updatePositionX(hero.getDesiredPositionX());
             //hero.setVelocityX(hero.getDesiredVelocityX());
         }
-        
-        if((tileAboveHero != null && tileAboveHero.getType().isIsSolidBottom() && tileAboveHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent())) 
-                 || hero.getPositionY() < 0 ){ //BLOCK TO  THE TOP
+
+        if ((tileAboveHero != null && tileAboveHero.getType().isIsSolidBottom() && tileAboveHero.getImageView().getBoundsInParent().intersects(hero.getImageView().getBoundsInParent()))
+                || hero.getPositionY() < 0) { //BLOCK TO  THE TOP
             hero.setIsBlockedAbove(true);
             System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK ABOVE");
             //if( hero.getFacingDirection() == Direction.LEFT){
-            if( hero.getVelocityY() < 0){
+            if (hero.getVelocityY() < 0) {
                 System.out.println("$$$$$$$$$$$$$$$$$$ COLLISION ABOVE");
-           // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
+                // if(hero.getImageView().getBoundsInParent().intersects(imageViewToTheRightOfHero.getBoundsInParent())){
                 hero.setVelocityY(0);
                 //hero.setAccelerationY(0);
-            //}
-            
-            } /*else {
+                //}
+
+            }
+            /*else {
                 System.out.println("$$$$$$$$$$$$$$$$$$ NO COLLISION TO  THE LEFT");
                 hero.updatePositionX(hero.getDesiredPositionX());
                 hero.setVelocityX(hero.getDesiredVelocityX());
@@ -399,26 +393,25 @@ System.out.println("$$$$$$$$ intersects:   "+ tileBelowHero.getImageView().getBo
             //hero.updatePositionX(hero.getDesiredPositionX());
             //hero.setVelocityX(hero.getDesiredVelocityX());
         }
-                
-                
-                
-                
-                
 
-System.out.println("UPDATED_FORCES"+hero);
-            }
-    
+        System.out.println("UPDATED_FORCES" + hero);
+    }
+
     private void updateSprites(float dt) {
         //animate hero
         hero.update(dt);
-        if(isXScrolling){
+        //Here
+        if (isXScrolling) {
             world.translateX(-hero.getDeltaPositionX());
-            world.translateY(-hero.getDeltaPositionY());
         } else {
             hero.setTranslateX((float) (hero.getImageView().getTranslateX() + hero.getDeltaPositionX()));
+        }
+        if (isYScrolling) {
+            world.translateY(-hero.getDeltaPositionY());
+        } else {
             hero.setTranslateY((float) (hero.getImageView().getTranslateY() + hero.getDeltaPositionY()));
         }
-System.out.println("UPDATED       "+hero);
+        System.out.println("UPDATED       " + hero);
         /*
         //animate zombies
         for (Zombie zombie : zombieArray) {
@@ -431,9 +424,9 @@ System.out.println("UPDATED       "+hero);
         for (Arrow arrow : arrowArray) {
             arrow.animate();
         }
-        */
+         */
     }
-    
+
     private void handleCollisions() {
         /*ImageView imageViewBelowHero = world.getTileImageViewBelow(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
         ImageView imageViewAboveHero = world.getTileImageViewAbove(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
@@ -443,13 +436,11 @@ System.out.println("UPDATED       "+hero);
         ImageView imageViewAboveToTheLeftOfHero = world.getTileImageViewAboveToTheLeft(hero.getPositionX(), hero.getPositionY(),  hero.getWidth(), hero.getHeight());
         ImageView imageViewBelowToTheRightOfHero = world.getTileImageViewBelowToTheRight(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
         ImageView imageViewBelowToTheLeftOfHero = world.getTileImageViewBelowToTheLeft(hero.getPositionX(), hero.getPositionY(), hero.getWidth(), hero.getHeight());
-        */
+         */
 //tiles and hero
-                
-       
+
 //           hero.updatePositionX(hero.getDesiredPositionX());
 //           hero.setVelocityX(hero.getDesiredVelocityX());
-        
         //LEFT
         /*
         if((tileToTheLeftOfHero != null && tileToTheLeftOfHero.isIsSolid() ) || hero.getPositionX() < 0 ){
@@ -475,15 +466,12 @@ System.out.println("$$$$$$$$$$$$$$$$$$ NO BLOCK TO  THE LEFT");
             hero.setVelocityX(hero.getDesiredVelocityX());
         }
         
-        */
-        
-        
-        
+         */
 //        hero.updatePositionY(hero.getDesiredPositionY());
 //               
 //        hero.setVelocityY(hero.getDesiredVelocityY());
-System.out.println("HANDLED COLLIS"+hero);
-System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("HANDLED COLLIS" + hero);
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------");
 
         /*
         for (Zombie zombie : zombieArray) {
@@ -538,10 +526,9 @@ System.out.println("------------------------------------------------------------
             gameWon = true;
             System.out.println("You Win!");
         }
-        */
+         */
     }
 
-    
     private void showFinalMessage() {
         /*
         if (gameWon) {
@@ -554,7 +541,7 @@ System.out.println("------------------------------------------------------------
         finalLabel.setTranslateX(WIDTH / 2 - finalLabel.getWidth() - 10);
         finalLabel.setTranslateY(HEIGHT / 2 - finalLabel.getHeight() - 10);
         root.getChildren().add(finalLabel);
-        */
+         */
     }
 
     /**
@@ -563,5 +550,32 @@ System.out.println("------------------------------------------------------------
     public static void main(String[] args) {
         launch(args);
     }
-     
+
+    @Override
+    public void handle(KeyEvent event) {
+
+        if (event.getCode() == KeyCode.ENTER) {
+            startGame();
+        }
+    }
+
+    private void startGame() {
+        splashWindow.hide();
+        stopSound();
+
+        gameWindow = new Stage();
+
+        Scene gameScene = createGameScene();
+
+        playSound(GAME_MUSIC_FILE);
+
+        gameWindow.setTitle(GAME_TITLE);
+        gameWindow.setScene(gameScene);
+        gameWindow.getIcons().add(new Image(GAME_ICON));
+        gameWindow.initModality(Modality.APPLICATION_MODAL);
+        gameWindow.show();
+
+        startGameLoop();
+    }
+
 }

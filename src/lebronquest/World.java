@@ -36,46 +36,212 @@ public class World {
 
     private void createTiles() {
         for(int i = 0; i < NUM_TILE_TYPES; i++){
-           tilesTypes[i] = new TileType("img/tiles/tile_"+i+".png", true, false, false, false, i); 
+           tilesTypes[i] = new TileType("img/tiles/tile_"+i+".png", false, false, false, false, i); 
         }
         
-        //tilesTypes[1].setIsSolidRight(true);
-        //tilesTypes[2].setIsSolidLeft(true);
-        //tilesTypes[3].setIsSolidLeft(true);
-        //tilesTypes[3].setIsSolidTop(false);
-        //tilesTypes[4].setIsSolidTop(false);
-        //tilesTypes[5].setIsSolidRight(true);
-        //tilesTypes[5].setIsSolidTop(false); 
-        tilesTypes[6].setIsSolidLeft(true);
-        tilesTypes[6].setIsSolidRight(true);
+        tilesTypes[0].setIsSolidTop(true);
+        tilesTypes[0].setIsSolidBottom(true);
+        tilesTypes[0].setIsSolidRight(true);
+        tilesTypes[0].setIsSolidLeft(true);
+        tilesTypes[1].setIsSolidTop(true);
+        tilesTypes[1].setIsSolidBottom(true);
+        tilesTypes[1].setIsSolidRight(true);
+        tilesTypes[1].setIsSolidLeft(true);
+        tilesTypes[2].setIsSolidTop(true);
+        tilesTypes[2].setIsSolidBottom(true);
+        tilesTypes[2].setIsSolidRight(true);
+        tilesTypes[2].setIsSolidLeft(true);
+        tilesTypes[3].setIsSolidTop(true);
+        tilesTypes[3].setIsSolidBottom(true);
+        tilesTypes[3].setIsSolidRight(true);
+        tilesTypes[3].setIsSolidLeft(true);
+        tilesTypes[4].setIsSolidTop(true);
+        tilesTypes[4].setIsSolidBottom(true);
+        tilesTypes[4].setIsSolidRight(true);
+        tilesTypes[4].setIsSolidLeft(true);
+        tilesTypes[5].setIsSolidTop(true);
+        tilesTypes[5].setIsSolidBottom(true);
+        tilesTypes[5].setIsSolidRight(true);
+        tilesTypes[5].setIsSolidLeft(true);
+        tilesTypes[6].setIsSolidTop(true);
         tilesTypes[6].setIsSolidBottom(true);
-        //tilesTypes[8].setIsSolidBottom(true); 
-        //tilesTypes[8].setIsSolidLeft(true); 
-        //tilesTypes[8].setIsSolidTop(false);
-        //tilesTypes[9].setIsSolidTop(false); 
-        //tilesTypes[9].setIsSolidBottom(true); 
-        //tilesTypes[10].setIsSolidTop(false);
-        //tilesTypes[10].setIsSolidRight(true);
-        //tilesTypes[11].setIsSolidTop(false);
-        //tilesTypes[12].setIsSolidBottom(false);        
-        //tilesTypes[12].setIsSolidRight(false);
+        tilesTypes[6].setIsSolidRight(true);
+        tilesTypes[6].setIsSolidLeft(true);
+        tilesTypes[7].setIsSolidTop(true);
+        tilesTypes[7].setIsSolidBottom(true);
+        tilesTypes[7].setIsSolidRight(true);
+        tilesTypes[7].setIsSolidLeft(true);
         
-        tilesTypes[12].setIsSolidTop(false);
-        tilesTypes[28].setIsSolidTop(false);
-        tilesTypes[37].setIsSolidTop(false);
-        tilesTypes[38].setIsSolidTop(false);
-        tilesTypes[39].setIsSolidTop(false);
-        tilesTypes[40].setIsSolidTop(false);
-        tilesTypes[41].setIsSolidTop(false);
-        tilesTypes[42].setIsSolidTop(false);
-        tilesTypes[43].setIsSolidTop(false);
-        tilesTypes[44].setIsSolidTop(false);
-        tilesTypes[45].setIsSolidTop(false);
-        tilesTypes[46].setIsSolidTop(false);
-        tilesTypes[50].setIsSolidTop(false);
-        tilesTypes[51].setIsSolidTop(false);
-        tilesTypes[54].setIsSolidTop(false);
-        tilesTypes[55].setIsSolidTop(false);
+        
+        tilesTypes[9].setIsSolidTop(true);
+        tilesTypes[9].setIsSolidBottom(true);
+        tilesTypes[9].setIsSolidRight(true);
+        tilesTypes[9].setIsSolidLeft(true);
+        tilesTypes[10].setIsSolidTop(true);
+        tilesTypes[10].setIsSolidBottom(true);
+        tilesTypes[10].setIsSolidRight(true);
+        tilesTypes[10].setIsSolidLeft(true);
+        tilesTypes[11].setIsSolidTop(true);
+        tilesTypes[11].setIsSolidBottom(true);
+        tilesTypes[11].setIsSolidRight(true);
+        tilesTypes[11].setIsSolidLeft(true);
+        
+        
+        tilesTypes[13].setIsSolidTop(true);
+        tilesTypes[13].setIsSolidBottom(true);
+        tilesTypes[13].setIsSolidRight(true);
+        tilesTypes[13].setIsSolidLeft(true);        
+        tilesTypes[14].setIsSolidTop(true);
+        tilesTypes[14].setIsSolidBottom(true);
+        tilesTypes[14].setIsSolidRight(true);
+        tilesTypes[14].setIsSolidLeft(true);
+        tilesTypes[15].setIsSolidTop(true);
+        tilesTypes[15].setIsSolidBottom(true);
+        tilesTypes[15].setIsSolidRight(true);
+        tilesTypes[15].setIsSolidLeft(true);
+        tilesTypes[16].setIsSolidTop(true);
+        tilesTypes[16].setIsSolidBottom(true);
+        tilesTypes[16].setIsSolidRight(true);
+        tilesTypes[16].setIsSolidLeft(true);
+        tilesTypes[17].setIsSolidTop(true);
+        tilesTypes[17].setIsSolidBottom(true);
+        tilesTypes[17].setIsSolidRight(true);
+        tilesTypes[17].setIsSolidLeft(true);
+        tilesTypes[18].setIsSolidTop(true);
+        tilesTypes[18].setIsSolidBottom(true);
+        tilesTypes[18].setIsSolidRight(true);
+        tilesTypes[18].setIsSolidLeft(true);
+        tilesTypes[19].setIsSolidTop(true);
+        tilesTypes[19].setIsSolidBottom(true);
+        tilesTypes[19].setIsSolidRight(true);
+        tilesTypes[19].setIsSolidLeft(true);
+        tilesTypes[20].setIsSolidTop(true);
+        tilesTypes[20].setIsSolidBottom(true);
+        tilesTypes[20].setIsSolidRight(true);
+        tilesTypes[20].setIsSolidLeft(true);
+        tilesTypes[21].setIsSolidTop(true);
+        tilesTypes[21].setIsSolidBottom(true);
+        tilesTypes[21].setIsSolidRight(true);
+        tilesTypes[21].setIsSolidLeft(true);
+        tilesTypes[22].setIsSolidTop(true);
+        tilesTypes[22].setIsSolidBottom(true);
+        tilesTypes[22].setIsSolidRight(true);
+        tilesTypes[22].setIsSolidLeft(true);
+        tilesTypes[23].setIsSolidTop(true);
+        tilesTypes[23].setIsSolidBottom(true);
+        tilesTypes[23].setIsSolidRight(true);
+        tilesTypes[23].setIsSolidLeft(true);
+        tilesTypes[24].setIsSolidTop(true);
+        tilesTypes[24].setIsSolidBottom(true);
+        tilesTypes[24].setIsSolidRight(true);
+        tilesTypes[24].setIsSolidLeft(true);
+        tilesTypes[25].setIsSolidTop(true);
+        tilesTypes[25].setIsSolidBottom(true);
+        tilesTypes[25].setIsSolidRight(true);
+        tilesTypes[25].setIsSolidLeft(true);
+        tilesTypes[26].setIsSolidTop(true);
+        tilesTypes[26].setIsSolidBottom(true);
+        tilesTypes[26].setIsSolidRight(true);
+        tilesTypes[26].setIsSolidLeft(true);
+        tilesTypes[27].setIsSolidTop(true);
+        tilesTypes[27].setIsSolidBottom(true);
+        tilesTypes[27].setIsSolidRight(true);
+        tilesTypes[27].setIsSolidLeft(true);
+        
+        
+        tilesTypes[29].setIsSolidTop(true);
+        tilesTypes[29].setIsSolidBottom(true);
+        tilesTypes[29].setIsSolidRight(true);
+        tilesTypes[29].setIsSolidLeft(true);
+        tilesTypes[30].setIsSolidTop(true);
+        tilesTypes[30].setIsSolidBottom(true);
+        tilesTypes[30].setIsSolidRight(true);
+        tilesTypes[30].setIsSolidLeft(true);
+        tilesTypes[31].setIsSolidTop(true);
+        tilesTypes[31].setIsSolidBottom(true);
+        tilesTypes[31].setIsSolidRight(true);
+        tilesTypes[31].setIsSolidLeft(true);
+        tilesTypes[32].setIsSolidTop(true);
+        tilesTypes[32].setIsSolidBottom(true);
+        tilesTypes[32].setIsSolidRight(true);
+        tilesTypes[32].setIsSolidLeft(true);
+        tilesTypes[33].setIsSolidTop(true);
+        tilesTypes[33].setIsSolidBottom(true);
+        tilesTypes[33].setIsSolidRight(true);
+        tilesTypes[33].setIsSolidLeft(true);
+        tilesTypes[34].setIsSolidTop(true);
+        tilesTypes[34].setIsSolidBottom(true);
+        tilesTypes[34].setIsSolidRight(true);
+        tilesTypes[34].setIsSolidLeft(true);
+        tilesTypes[35].setIsSolidTop(true);
+        tilesTypes[35].setIsSolidBottom(true);
+        tilesTypes[35].setIsSolidRight(true);
+        tilesTypes[35].setIsSolidLeft(true);
+        tilesTypes[36].setIsSolidTop(true);
+        tilesTypes[36].setIsSolidBottom(true);
+        tilesTypes[36].setIsSolidRight(true);
+        tilesTypes[36].setIsSolidLeft(true);
+        
+        
+        tilesTypes[47].setIsSolidTop(true);
+        tilesTypes[47].setIsSolidBottom(true);
+        tilesTypes[47].setIsSolidRight(true);
+        tilesTypes[47].setIsSolidLeft(true);
+        tilesTypes[48].setIsSolidTop(true);
+        tilesTypes[48].setIsSolidBottom(true);
+        tilesTypes[48].setIsSolidRight(true);
+        tilesTypes[48].setIsSolidLeft(true);
+        tilesTypes[49].setIsSolidTop(true);
+        tilesTypes[49].setIsSolidBottom(true);
+        tilesTypes[49].setIsSolidRight(true);
+        tilesTypes[49].setIsSolidLeft(true);
+        
+        
+        tilesTypes[52].setIsSolidTop(true);
+        tilesTypes[52].setIsSolidBottom(true);
+        tilesTypes[52].setIsSolidRight(true);
+        tilesTypes[52].setIsSolidLeft(true);
+        tilesTypes[53].setIsSolidTop(true);
+        tilesTypes[53].setIsSolidBottom(true);
+        tilesTypes[53].setIsSolidRight(true);
+        tilesTypes[53].setIsSolidLeft(true);
+        
+        
+        tilesTypes[56].setIsSolidTop(true);
+        tilesTypes[56].setIsSolidBottom(true);
+        tilesTypes[56].setIsSolidRight(true);
+        tilesTypes[56].setIsSolidLeft(true);
+        tilesTypes[57].setIsSolidTop(true);
+        tilesTypes[57].setIsSolidBottom(true);
+        tilesTypes[57].setIsSolidRight(true);
+        tilesTypes[57].setIsSolidLeft(true);
+        tilesTypes[58].setIsSolidTop(true);
+        tilesTypes[58].setIsSolidBottom(true);
+        tilesTypes[58].setIsSolidRight(true);
+        tilesTypes[58].setIsSolidLeft(true);
+        tilesTypes[59].setIsSolidTop(true);
+        tilesTypes[59].setIsSolidBottom(true);
+        tilesTypes[59].setIsSolidRight(true);
+        tilesTypes[59].setIsSolidLeft(true);
+        tilesTypes[60].setIsSolidTop(true);
+        tilesTypes[60].setIsSolidBottom(true);
+        tilesTypes[60].setIsSolidRight(true);
+        tilesTypes[60].setIsSolidLeft(true);
+        tilesTypes[61].setIsSolidTop(true);
+        tilesTypes[61].setIsSolidBottom(true);
+        tilesTypes[61].setIsSolidRight(true);
+        tilesTypes[61].setIsSolidLeft(true);
+        tilesTypes[62].setIsSolidTop(true);
+        tilesTypes[62].setIsSolidBottom(true);
+        tilesTypes[62].setIsSolidRight(true);
+        tilesTypes[62].setIsSolidLeft(true);
+        tilesTypes[63].setIsSolidTop(true);
+        tilesTypes[63].setIsSolidBottom(true);
+        tilesTypes[63].setIsSolidRight(true);
+        tilesTypes[63].setIsSolidLeft(true);
+        
+        
+        
     }
 
     private void readMap() {

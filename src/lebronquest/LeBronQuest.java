@@ -307,7 +307,7 @@ System.out.println("$$$$$$$$ intersects:   "+ tileBelowHero.getImageView().getBo
  System.out.println("$$$$$$$$$$$$$$$$$$ BLOCK BELOW");
 //System.out.println("%%%%%%%%tileBelow.isIsSolid()="+ tileBelowHero.isIsSolid());
             if(!hero.isOnGround()){
-                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW");
+                System.out.println("$$$$$$$$$$$$$$$$$$ WAS A NEW BLOCK BELOW, isYScrolling="+isYScrolling+",isXScrolling="+isXScrolling);
                 hero.setOnGround(true);
                 //hero.setAccelerationY(hero.getAccelerationY() - GRAVITY);
                 hero.setAccelerationY(0);

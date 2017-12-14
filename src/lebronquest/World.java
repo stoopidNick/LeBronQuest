@@ -298,15 +298,15 @@ public class World {
         }
     }
 
-    int getXCoordinate(float positionX, float width){
+    private int getXCoordinate(float positionX, float width){
         return (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
     }
     
-    int getYCoordinate(float positionY, float height){
+    private int getYCoordinate(float positionY, float height){
         return (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
     }
     
-    Tile getTileAbove(float positionX, float positionY, float width, float height) {
+    public Tile getTileAbove(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH)
@@ -314,7 +314,7 @@ public class World {
         else return null;
     }
 
-    Tile getTileBelow(float positionX, float positionY, float width, float height) {
+    public Tile getTileBelow(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH)
@@ -322,7 +322,7 @@ public class World {
         else return null;
     }
 
-    Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
+    public Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if (row >= 0 && row < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
@@ -331,7 +331,7 @@ public class World {
     }
    
 
-    Tile getTileToTheLeft(float positionX, float positionY, float width, float height) {
+    public Tile getTileToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if (row >= 0 && row < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
@@ -339,7 +339,7 @@ public class World {
         else return null;
     }
 
-    Tile getTileAboveToTheRight(float positionX, float positionY, float width, float height) {
+    public Tile getTileAboveToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
@@ -347,7 +347,7 @@ public class World {
         else return null;
     }
 
-    Tile getTileAboveToTheLeft(float positionX, float positionY, float width, float height) {
+    public Tile getTileAboveToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)
@@ -355,7 +355,7 @@ public class World {
         else return null;
     }
 
-    Tile getTileBelowToTheRight(float positionX, float positionY, float width, float height) {
+    public Tile getTileBelowToTheRight(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH)
@@ -363,7 +363,7 @@ public class World {
         else return null;
     }
 
-    Tile getTileBelowToTheLeft(float positionX, float positionY, float width, float height) {
+    public Tile getTileBelowToTheLeft(float positionX, float positionY, float width, float height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH)

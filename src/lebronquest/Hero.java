@@ -10,8 +10,8 @@ import javafx.scene.input.KeyEvent;
 public class Hero extends Sprite  implements EventHandler<KeyEvent>{
     private int health;   
     public Direction facingDirection;
-    private static final float dAccelerationX = 0.8f;    
-    private static final float dAccelerationY = 50f;
+    private static final float D_ACCELERATION_X = 0.8f;    
+    private static final float D_ACCELERATION_Y = 50f;
     private float positionX;
     private float positionY;
     private float previousPositionX;
@@ -134,7 +134,7 @@ System.out.println("              isBlockedToTheLeft="+isBlockedToTheLeft);
 System.out.println("      leftKeyPressed="+leftKeyPressed);
                 //velocityX = velocityX - speed;
                 if(!isBlockedToTheLeft){
-                    accelerationX -= dAccelerationX;
+                    accelerationX -= D_ACCELERATION_X;
                 }
                 imageView.setScaleX(-1);//flips the image
                 facingDirection = Direction.LEFT;
@@ -144,7 +144,7 @@ System.out.println("HAN LFT KEY  PR"+this);
 System.out.println("      rightKeyPressed="+rightKeyPressed);
                 //velocityX = velocityX + speed;
                 if(!isBlockedToTheRight){
-                    accelerationX += dAccelerationX;
+                    accelerationX += D_ACCELERATION_X;
                 }
                 imageView.setScaleX(1);//flips the image
                 facingDirection = Direction.RIGHT;
@@ -155,7 +155,7 @@ System.out.println("HAN RGT KEY  PR"+this);
 
 System.out.println("onGround?"+onGround);
                 if(onGround){
-                    accelerationY -= dAccelerationY;
+                    accelerationY -= D_ACCELERATION_Y;
                 }
 System.out.println("HAND UP KEY PR"+this);
             } else if(event.getCode() == KeyCode.DOWN && !downKeyPressed){
@@ -192,7 +192,7 @@ System.out.println("HAND SP KEY PR"+this);
 System.out.println("      leftKeyPressed="+leftKeyPressed);
                 //velocityX = velocityX + speed;
                 if(accelerationX < 0){
-                    accelerationX += dAccelerationX;
+                    accelerationX += D_ACCELERATION_X;
                 }
 System.out.println("HAN LFT KEY  RE"+this);
             } else if(event.getCode() == KeyCode.RIGHT ){
@@ -200,7 +200,7 @@ System.out.println("HAN LFT KEY  RE"+this);
 System.out.println("      rightKeyPressed="+rightKeyPressed);
                 if(accelerationX > 0){
                 //velocityX = velocityX - speed;
-                    accelerationX -= dAccelerationX;
+                    accelerationX -= D_ACCELERATION_X;
                 }
 System.out.println("HAN RGT KEY  RE"+this);
             }else if(event.getCode() == KeyCode.UP){
@@ -309,11 +309,8 @@ System.out.println("HAN DO KEY  RE"+this);
         this.isBlockedAbove = isBlockedAbove;
     }
     
-    
-    
-
     @Override
     public String toString() {
-        return "Hero{" + "health=" + health + ", facingDirection=" + facingDirection + ", dAccelerationX=" + dAccelerationX + ", positionX=" + positionX + ", positionY=" + positionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + ", XAxisKeyPressed=" + leftKeyPressed + '}';
+        return "Hero{" + "health=" + health + ", facingDirection=" + facingDirection + ", dAccelerationX=" + D_ACCELERATION_X + ", positionX=" + positionX + ", positionY=" + positionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + ", XAxisKeyPressed=" + leftKeyPressed + '}';
     }
 }

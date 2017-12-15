@@ -5,6 +5,8 @@
  */
 package lebronquest;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.image.Image;
 
 /**
@@ -12,9 +14,11 @@ import javafx.scene.image.Image;
  * @author transflorida
  */
 public class TileType {
+
+    private final static Logger LOGGER = Logger.getLogger(TileType.class.getName());
     //Images for the tiles should be 32x32
     public static final int TILE_WIDTH = 32;
-    public static final int TILE_HEIGHT = 32; 
+    public static final int TILE_HEIGHT = 32;
     private boolean isSolidTop;
     private boolean isSolidBottom;
     private boolean isSolidLeft;
@@ -22,8 +26,8 @@ public class TileType {
     private Image image;
     private int ID;
 
-    
     public TileType(String filename, boolean isSolidTop, boolean isSolidBottom, boolean isSolidLeft, boolean isSolidRight, int ID) {
+        LOGGER.setLevel(Level.INFO);
         image = new Image(filename);
         this.isSolidTop = isSolidTop;
         this.isSolidBottom = isSolidBottom;
@@ -31,9 +35,6 @@ public class TileType {
         this.isSolidRight = isSolidRight;
         this.ID = ID;
     }
-    
-
-    
 
     public Image getImage() {
         return image;
@@ -75,8 +76,6 @@ public class TileType {
         this.isSolidRight = isSolidRight;
     }
 
-    
-
     public void setImage(Image image) {
         this.image = image;
     }
@@ -86,9 +85,4 @@ public class TileType {
         return "TileType{" + "isSolidTop=" + isSolidTop + ", isSolidBottom=" + isSolidBottom + ", isSolidLeft=" + isSolidLeft + ", isSolidRight=" + isSolidRight + ", image=" + image + ", ID=" + ID + '}';
     }
 
-    
-    
-    
-    
-    
 }

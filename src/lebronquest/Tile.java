@@ -5,6 +5,8 @@
  */
 package lebronquest;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.image.ImageView;
 
 /**
@@ -12,18 +14,20 @@ import javafx.scene.image.ImageView;
  * @author transflorida
  */
 public class Tile {
+
+    private final static Logger LOGGER = Logger.getLogger(Tile.class.getName());
     private ImageView imageView;
     private TileType type;
     private int row;
     private int column;
 
     public Tile(ImageView imageView, TileType type, int row, int column) {
+        LOGGER.setLevel(Level.INFO);
         this.imageView = imageView;
         this.type = type;
         this.row = row;
         this.column = column;
-    }   
-    
+    }
 
     public TileType getType() {
         return type;
@@ -54,7 +58,4 @@ public class Tile {
         return "Tile{" + "imageView=" + imageView + ", type=" + type + ", row=" + row + ", column=" + column + '}';
     }
 
-
-    
-    
 }

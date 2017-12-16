@@ -31,7 +31,7 @@ public class World {
     private final Group root;
 
     public World(Group root) {
-        LOGGER.setLevel(Level.INFO);
+        LOGGER.setLevel(Level.OFF);
         this.root = root;
         createTiles();
         readMap();
@@ -268,7 +268,7 @@ public class World {
         }
     }
 
-    public void translateX(float XScroll) {
+    public void translateX(double XScroll) {
         for (int row = 0; row < MAP_HEIGHT; row++) {
             for (int col = 0; col < MAP_WIDTH; col++) {
                 tileMap[row][col].getImageView().setTranslateX(tileMap[row][col].getImageView().getTranslateX() + XScroll);//+ XScroll
@@ -276,10 +276,19 @@ public class World {
         }
     }
 
-    public void translateY(float YScroll) {
+    public void translateY(double YScroll) {
         for (int row = 0; row < MAP_HEIGHT; row++) {
             for (int col = 0; col < MAP_WIDTH; col++) {
                 tileMap[row][col].getImageView().setTranslateY(tileMap[row][col].getImageView().getTranslateY() + YScroll); // + YScroll
+            }
+        }
+    }
+    
+    void reset() {
+        for (int row = 0; row < MAP_HEIGHT; row++) {
+            for (int col = 0; col < MAP_WIDTH; col++) {
+                tileMap[row][col].getImageView().setTranslateX(col * TileType.TILE_WIDTH);               
+                tileMap[row][col].getImageView().setTranslateY(row * TileType.TILE_HEIGHT); 
             }
         }
     }
@@ -287,21 +296,21 @@ public class World {
     private void printMap() {
         for (int row = 0; row < MAP_HEIGHT; row++) {
             for (int col = 0; col < MAP_WIDTH; col++) {
-                System.out.print(tileMap[row][col].getType() + " ");
+                LOGGER.info(tileMap[row][col].getType() + " ");
             }
             LOGGER.info("\n");
         }
     }
 
-    private int getXCoordinate(float positionX, float width) {
+    private int getXCoordinate(double positionX, double width) {
         return (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
     }
 
-    private int getYCoordinate(float positionY, float height) {
+    private int getYCoordinate(double positionY, double height) {
         return (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
     }
 
-    public Tile getTileAbove(float positionX, float positionY, float width, float height) {
+    public Tile getTileAbove(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH) {
@@ -311,7 +320,7 @@ public class World {
         }
     }
 
-    public Tile getTileBelow(float positionX, float positionY, float width, float height) {
+    public Tile getTileBelow(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH) {
@@ -321,7 +330,7 @@ public class World {
         }
     }
 
-    public Tile getTileToTheRight(float positionX, float positionY, float width, float height) {
+    public Tile getTileToTheRight(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if (row >= 0 && row < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH) {
@@ -331,7 +340,7 @@ public class World {
         }
     }
 
-    public Tile getTileToTheLeft(float positionX, float positionY, float width, float height) {
+    public Tile getTileToTheLeft(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if (row >= 0 && row < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH) {
@@ -341,7 +350,7 @@ public class World {
         }
     }
 
-    public Tile getTileAboveToTheRight(float positionX, float positionY, float width, float height) {
+    public Tile getTileAboveToTheRight(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH) {
@@ -351,7 +360,7 @@ public class World {
         }
     }
 
-    public Tile getTileAboveToTheLeft(float positionX, float positionY, float width, float height) {
+    public Tile getTileAboveToTheLeft(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row - 1) >= 0 && (row - 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH) {
@@ -361,7 +370,7 @@ public class World {
         }
     }
 
-    public Tile getTileBelowToTheRight(float positionX, float positionY, float width, float height) {
+    public Tile getTileBelowToTheRight(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col + 1) >= 0 && (col + 1) < MAP_WIDTH) {
@@ -371,7 +380,7 @@ public class World {
         }
     }
 
-    public Tile getTileBelowToTheLeft(float positionX, float positionY, float width, float height) {
+    public Tile getTileBelowToTheLeft(double positionX, double positionY, double width, double height) {
         int row = (int) ((positionY + height / 2) / TileType.TILE_HEIGHT);
         int col = (int) ((positionX + width / 2) / TileType.TILE_WIDTH);
         if ((row + 1) >= 0 && (row + 1) < MAP_HEIGHT && (col - 1) >= 0 && (col - 1) < MAP_WIDTH) {
@@ -380,5 +389,7 @@ public class World {
             return null;
         }
     }
+
+    
 
 }

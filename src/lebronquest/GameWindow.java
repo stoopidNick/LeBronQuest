@@ -6,6 +6,7 @@
 package lebronquest;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,9 +14,11 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -38,9 +41,15 @@ public class GameWindow {
     private Button soundButton;
     private ImageView soundOffImageView;
     private ImageView soundOnImageView;
+    private Label finalLabel;
+    private Label healthLabel;    
+    private Label scoreLabel;
+    private Button restartButton;
 
     public GameWindow(LeBronQuest application) {
         this.application = application;
+        gameRoot = new Group();
+        LOGGER.setLevel(Level.OFF);
     }
     
     public void show(){
@@ -65,10 +74,15 @@ public class GameWindow {
     }
     
     private void createGameScene() {
-        gameRoot = new Group();
+        
         scene = new Scene(gameRoot, SCENE_WIDTH, SCENE_HEIGHT, GAME_BACKGROUND_COLOR);
         scene.getStylesheets().add("resources/styles.css");
 
+        createSoundButtons();
+        
+        createTopPanel();
+        
+        createFinalComponents();
 
     }
 
@@ -91,6 +105,7 @@ public class GameWindow {
         soundOffImageView = new ImageView(new Image("img/soundOff.png"));
         soundOnImageView = new ImageView(new Image("img/soundOn.png"));
         soundButton.setGraphic(soundOffImageView);
+        soundButton.toFront();
 
         soundButton.setTranslateX(SCENE_WIDTH - soundOnImageView.getBoundsInParent().getWidth() - 20);
         soundButton.setTranslateY(SCENE_HEIGHT - soundOnImageView.getBoundsInParent().getHeight() - 20);
@@ -135,25 +150,109 @@ public class GameWindow {
 
     Hero createHero() {
         //create hero
-        ArrayList<Rectangle2D> heroViewPorts = new ArrayList<>();
-        heroViewPorts.add(new Rectangle2D(0, 0, 28, 36));
-        heroViewPorts.add(new Rectangle2D(47, 0, 28, 36));
-        heroViewPorts.add(new Rectangle2D(93, 0, 28, 36));
-        heroViewPorts.add(new Rectangle2D(135, 0, 28, 36));
-        heroViewPorts.add(new Rectangle2D(185, 0, 28, 36));
-        heroViewPorts.add(new Rectangle2D(232, 0, 28, 36));
+        
 
-        Hero hero = new Hero("img/hero.png", true, heroViewPorts, Direction.RIGHT);
+        Hero hero = new Hero();
         gameRoot.applyCss();
         gameRoot.layout();
-        hero.setPositionX(28 * TileType.TILE_WIDTH / 2);
-        hero.setTranslateX(28 * TileType.TILE_WIDTH / 2);
-        hero.setPositionY(SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT - (int) hero.getHeight());
-        hero.setTranslateY(SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT - (int) hero.getHeight());
+        hero.setPositionY(hero.getPositionY() - (int) hero.getHeight());
+        hero.setTranslateY(hero.getImageView().getTranslateY() - (int) hero.getHeight());
         LOGGER.info("CREATED       " + hero);
         gameRoot.getChildren().add(hero.getImageView());//hero node added to scene graph
         return hero;
         
     }
+
+    void showFinalScene(boolean gameWon, int score) {
+        if (gameWon) {
+            finalLabel.setText("Game Over. \nYou Won! ");
+        } else {
+            finalLabel.setText("Game Over!");
+        }
+        gameRoot.applyCss();
+        gameRoot.layout();
+        
+        finalLabel.setTranslateX(SCENE_WIDTH / 2 - finalLabel.getBoundsInParent().getWidth()/ 2);
+        finalLabel.setTranslateY(SCENE_HEIGHT / 2 - finalLabel.getBoundsInParent().getHeight() / 2 );
+        restartButton.setTranslateX(SCENE_WIDTH / 2 - restartButton.getBoundsInParent().getWidth() / 2 );
+        restartButton.setTranslateY(SCENE_HEIGHT / 2 - restartButton.getBoundsInParent().getHeight()/ 2 + 100);
+        
+        finalLabel.setVisible(true);
+        finalLabel.toFront();
+        restartButton.setVisible(true);
+        restartButton.toFront();
+    }
     
+    void hideFinalScene() {
+        
+        finalLabel.setVisible(false);
+        restartButton.setVisible(false);
+        finalLabel.toBack();
+        restartButton.toBack();
+    }
+    
+    void createFinalComponents(){
+
+        finalLabel = new Label();
+        
+        //css
+        finalLabel.setId("gameOver-text");
+        gameRoot.getChildren().add(finalLabel);
+        
+        finalLabel.setVisible(false);
+        
+        restartButton = new Button("Play again");
+        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                LOGGER.info("**************************************RESTART*****************************************");
+                if (application.isSoundIsPlaying()) {
+                    application.stopSound();
+                    application.playSound(GAME_MUSIC_FILE);
+                } 
+                application.restart();
+                hideFinalScene();
+            }
+        });
+
+        gameRoot.getChildren().add(restartButton);
+        restartButton.setVisible(false);
+    }
+
+    void createTopPanel(){
+
+        healthLabel = new Label("Health: " + Hero.MAX_HEALTH);        
+        //css
+        healthLabel.setId("health-text");
+        healthLabel.setTranslateX(10);
+        healthLabel.setTranslateY(10);    
+        healthLabel.setVisible(true);    
+        healthLabel.toFront();
+        gameRoot.getChildren().add(healthLabel);    
+        
+        
+        scoreLabel = new Label("Score: " + 0);        
+        //css
+        scoreLabel.setId("score-text");
+        scoreLabel.setTranslateY(10);    
+        scoreLabel.setVisible(true);    
+        scoreLabel.toFront();
+        gameRoot.getChildren().add(scoreLabel); 
+       
+        gameRoot.applyCss();
+        gameRoot.layout();
+        
+        
+        scoreLabel.setTranslateX(SCENE_WIDTH  - scoreLabel.getWidth() - 30);
+        
+    }
+    
+    public void updateHealthLabel(int health){
+        healthLabel.setText("Health: " + health);
+    }
+
+    public void updateScoreLabel(int score){
+        scoreLabel.setText("Score: " + score);
+    }
 }

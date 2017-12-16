@@ -22,8 +22,8 @@ public abstract class Sprite {
     protected String imageFile;
     protected Image image;
     protected ImageView imageView;
-    protected float width;//width is constant, we take the width of the first viewport
-    protected float height;//same
+    protected double width;//width is constant, we take the width of the first viewport
+    protected double height;//same
     protected boolean isVisible;
 
     protected int viewportCounter;
@@ -31,34 +31,30 @@ public abstract class Sprite {
     
     protected int health;
     public Direction facingDirection;
-    protected static float dAccelerationX;
-    protected static float dAccelerationY ;
-    protected float positionX;
-    protected float positionY;
-    protected float previousPositionX;
-    protected float previousPositionY;
-    protected float velocityX;
-    protected float velocityY;
-    protected float accelerationX;
-    protected float accelerationY;
+    protected static double dAccelerationX;
+    protected static double dAccelerationY ;
+    protected double positionX;
+    protected double positionY;
+    protected double previousPositionX;
+    protected double previousPositionY;
+    protected double velocityX;
+    protected double velocityY;
+    protected double accelerationX;
+    protected double accelerationY;
     protected boolean onGround;
     protected boolean isBlockedToTheRight;
     protected boolean isBlockedToTheLeft;
     protected boolean isBlockedAbove;
 
     public Sprite(String imageFile, int initialX, int initialY, boolean isVisible,
-            ArrayList<Rectangle2D> viewportsCoords, int health, Direction facingDirection, float dAccelerationX, float dAccelerationY){
-            //String imageFile, Image image, ImageView imageView, float width, float height, boolean isVisible, int viewportCounter, ArrayList<Rectangle2D> viewports, int health, Direction facingDirection, float positionX, float positionY, float previousPositionX, float previousPositionY, float velocityX, float velocityY, float accelerationX, float accelerationY, boolean onGround, boolean isBlockedToTheRight, boolean isBlockedToTheLeft, boolean isBlockedAbove) {
+             int health, Direction facingDirection, double dAccelerationX, double dAccelerationY){
         this.imageFile = imageFile;        
         this.image = new Image(imageFile);
         imageView = new ImageView(this.image);
         imageView.setCache(true);
         imageView.setSmooth(true);
-        viewports = viewportsCoords;
         viewportCounter = 0;
-        imageView.setViewport(viewports.get(viewportCounter));
-        width = (float) this.getImageView().getBoundsInParent().getWidth();
-        height = (float) this.getImageView().getBoundsInParent().getHeight();
+        
         imageView.setTranslateX(initialX);//initial x
         imageView.setTranslateY(initialY);//initial y
 
@@ -77,20 +73,20 @@ public abstract class Sprite {
         
         Sprite.dAccelerationX = dAccelerationX;//0.8
         Sprite.dAccelerationY = dAccelerationY;//50
-        LOGGER.setLevel(Level.INFO);
+        LOGGER.setLevel(Level.OFF);
     }
 
-    public abstract void update(float dt);
+    public abstract void update(double dt);
 
     public Image getImage() {
         return image;
     }
 
-    public float getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public float getHeight() {
+    public double getHeight() {
         return height;
     }
 
@@ -114,56 +110,55 @@ public abstract class Sprite {
         this.isVisible = isVisible;
     }
 
-    public void setPositionX(float positionX) {
+    public void setPositionX(double positionX) {
         previousPositionX = this.positionX;
         this.positionX = positionX;
 
     }
 
-    public void setTranslateX(float translateX) {
+    public void setTranslateX(double translateX) {
         imageView.setTranslateX(translateX);
 
     }
 
-    public void setPositionY(float positionY) {
+    public void setPositionY(double positionY) {
         previousPositionY = this.positionY;
         this.positionY = positionY;
-        LOGGER.info("*****************new  Position Y (because of block)=" + positionY);
     }
 
-    public void setTranslateY(float translateY) {
+    public void setTranslateY(double translateY) {
         imageView.setTranslateY(translateY);
     }
 
-    public float getDeltaPositionX() {
+    public double getDeltaPositionX() {
         return positionX - previousPositionX;
     }
 
-    public float getDeltaPositionY() {
+    public double getDeltaPositionY() {
         return positionY - previousPositionY;
     }
 
-    public float getAccelerationX() {
+    public double getAccelerationX() {
         return accelerationX;
     }
 
-    public float getAccelerationY() {
+    public double getAccelerationY() {
         return accelerationY;
     }
 
-    public float getPositionX() {
+    public double getPositionX() {
         return positionX;
     }
 
-    public float getPositionY() {
+    public double getPositionY() {
         return positionY;
     }
 
-    public float getVelocityX() {
+    public double getVelocityX() {
         return velocityX;
     }
 
-    public float getVelocityY() {
+    public double getVelocityY() {
         return velocityY;
     }
 
@@ -191,19 +186,19 @@ public abstract class Sprite {
         this.facingDirection = facingDirection;
     }
 
-    public void setVelocityX(float velocityX) {
+    public void setVelocityX(double velocityX) {
         this.velocityX = velocityX;
     }
 
-    public void setVelocityY(float velocityY) {
+    public void setVelocityY(double velocityY) {
         this.velocityY = velocityY;
     }
 
-    public void setAccelerationX(float accelerationX) {
+    public void setAccelerationX(double accelerationX) {
         this.accelerationX = accelerationX;
     }
 
-    public void setAccelerationY(float accelerationY) {
+    public void setAccelerationY(double accelerationY) {
         this.accelerationY = accelerationY;
     }
 
@@ -219,9 +214,13 @@ public abstract class Sprite {
         this.isBlockedAbove = isBlockedAbove;
     }
 
+    public void setViewports(ArrayList<Rectangle2D> viewports) {
+        this.viewports = viewports;
+    }
+
     @Override
     public String toString() {
-        return "Sprite{" + "imageFile=" + imageFile + ", image=" + image + ", imageView=" + imageView + ", width=" + width + ", height=" + height + ", isVisible=" + isVisible + ", viewportCounter=" + viewportCounter + ", viewports=" + viewports + ", health=" + health + ", facingDirection=" + facingDirection + ", positionX=" + positionX + ", positionY=" + positionY + ", previousPositionX=" + previousPositionX + ", previousPositionY=" + previousPositionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + '}';
+        return "Sprite{" + " positionX=" + positionX + ", positionY=" + positionY + ", previousPositionX=" + previousPositionX + ", previousPositionY=" + previousPositionY + ", velocityX=" + velocityX + ", velocityY=" + velocityY + ", accelerationX=" + accelerationX + ", accelerationY=" + accelerationY + ", onGround=" + onGround + ", isBlockedToTheRight=" + isBlockedToTheRight + ", isBlockedToTheLeft=" + isBlockedToTheLeft + ", isBlockedAbove=" + isBlockedAbove + ", width=" + width + ", height=" + height + ", isVisible=" + isVisible + ", viewportCounter=" + viewportCounter + ", health=" + health + ", facingDirection=" + facingDirection+'}';
     }
     
     

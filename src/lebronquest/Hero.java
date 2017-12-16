@@ -11,32 +11,50 @@ import javafx.scene.input.KeyEvent;
 public class Hero extends Sprite implements EventHandler<KeyEvent> {
 
     private final static Logger LOGGER = Logger.getLogger(Hero.class.getName());
-    private static final float HERO_D_ACCELERATION_X = 0.8f;
-    private static final float HERO_D_ACCELERATION_Y = 50f;    
+    private static final double HERO_D_ACCELERATION_X = 0.8f;
+    private static final double HERO_D_ACCELERATION_Y = 50f;    
     public static final int MAX_HEALTH = 100;
+    public static final int INITIAL_POSITION_X = 28 * TileType.TILE_WIDTH / 2;
+    public static final int INITIAL_POSITION_Y = GameWindow.SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT;
+    public static final Direction INITIAL_DIRECTION = Direction.RIGHT;
+    public static final String imageFilename = "img/hero.png";
 
     private boolean leftKeyPressed;
     private boolean rightKeyPressed;
     private boolean upKeyPressed;
     private boolean downKeyPressed;
 
-    public Hero(String imageFile, int initialX, int initialY, boolean isVisible,
-            ArrayList<Rectangle2D> viewportsCoords, Direction facingDirection) {
-        super(imageFile, initialX, initialY, isVisible, viewportsCoords, MAX_HEALTH, facingDirection, HERO_D_ACCELERATION_X, HERO_D_ACCELERATION_Y);
-        LOGGER.setLevel(Level.INFO);
+   
+
+    public Hero() {
+        super(imageFilename, INITIAL_POSITION_X, INITIAL_POSITION_Y, true, MAX_HEALTH, INITIAL_DIRECTION, HERO_D_ACCELERATION_X, HERO_D_ACCELERATION_Y);
+        
         leftKeyPressed = false;
         rightKeyPressed = false;
         upKeyPressed = false;
         downKeyPressed = false;
-    }
-
-    public Hero(String imageFile, boolean isVisible,
-            ArrayList<Rectangle2D> viewportsCoords, Direction facingDirection) {
-        this(imageFile, 0, 0, isVisible, viewportsCoords, facingDirection);
+        imageView.setTranslateX(INITIAL_POSITION_X);
+        imageView.setTranslateY(INITIAL_POSITION_Y);
+        
+        ArrayList<Rectangle2D> heroViewPorts = new ArrayList<>();
+        heroViewPorts.add(new Rectangle2D(0, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(47, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(93, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(135, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(185, 0, 28, 36));
+        heroViewPorts.add(new Rectangle2D(232, 0, 28, 36));
+        
+        setViewports(heroViewPorts);
+        
+        imageView.setViewport(viewports.get(viewportCounter));
+        width = this.getImageView().getBoundsInParent().getWidth();
+        height = this.getImageView().getBoundsInParent().getHeight();
+        LOGGER.setLevel(Level.OFF);
+        
     }
     
     @Override
-    public void update(float dt) {
+    public void update(double dt) {
         if (onGround) {
             if (Math.abs(accelerationX - 0) < 0.01) {
                 accelerationX = 0;
@@ -57,13 +75,11 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
 
         previousPositionX = positionX;
         previousPositionY = positionY;
-        float dt2 = (float) Math.pow(dt, 2);
+        double dt2 = Math.pow(dt, 2);
         positionX = accelerationX * dt2 / 2 + velocityX * dt + positionX;
         positionY = accelerationY * dt2 / 2 + velocityY * dt + positionY;
-        LOGGER.info("*****************new Hero Position Y=" + positionY);
 
         //animating hero
-        //if(desiredVelocityX != 0){
         if (leftKeyPressed || rightKeyPressed) {
             viewportCounter = (++viewportCounter) % (viewports.size());
             imageView.setViewport(viewports.get(viewportCounter));
@@ -72,16 +88,11 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent event) {
-        LOGGER.info("              isBlockedToTheRight=" + isBlockedToTheRight);
-        LOGGER.info("              isBlockedToTheLeft=" + isBlockedToTheLeft);
 
         if (event.getEventType() == KeyEvent.KEY_PRESSED) {
 
-            //viewportCounter = ++viewportCounter % viewports.size();
             if (event.getCode() == KeyCode.LEFT && !leftKeyPressed) {
                 leftKeyPressed = true;
-                LOGGER.info("      leftKeyPressed=" + leftKeyPressed);
-                //velocityX = velocityX - speed;
                 if (!isBlockedToTheLeft) {
                     accelerationX -= dAccelerationX;
                 }
@@ -90,8 +101,6 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
                 LOGGER.info("HAN LFT KEY  PR" + this);
             } else if (event.getCode() == KeyCode.RIGHT && !rightKeyPressed) {
                 rightKeyPressed = true;
-                LOGGER.info("      rightKeyPressed=" + rightKeyPressed);
-                //velocityX = velocityX + speed;
                 if (!isBlockedToTheRight) {
                     accelerationX += dAccelerationX;
                 }
@@ -101,8 +110,6 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
             } else if (event.getCode() == KeyCode.UP && !upKeyPressed) {
                 upKeyPressed = true;
                 //facingDirection = Direction.UP;
-
-                LOGGER.info("onGround?" + onGround);
                 if (onGround) {
                     accelerationY -= dAccelerationY;
                 }
@@ -110,7 +117,6 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
             } else if (event.getCode() == KeyCode.DOWN && !downKeyPressed) {
                 downKeyPressed = true;
                 facingDirection = Direction.DOWN;
-                //velocityY = velocityY + speed;
                 LOGGER.info("HAND DO KEY PR" + this);
             } else if (event.getCode() == KeyCode.SPACE) {
                 /*
@@ -137,33 +143,21 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
 
             if (event.getCode() == KeyCode.LEFT) {
                 leftKeyPressed = false;
-                LOGGER.info("      leftKeyPressed=" + leftKeyPressed);
-                //velocityX = velocityX + speed;
                 if (accelerationX < 0) {
                     accelerationX += dAccelerationX;
                 }
                 LOGGER.info("HAN LFT KEY  RE" + this);
             } else if (event.getCode() == KeyCode.RIGHT) {
                 rightKeyPressed = false;
-                LOGGER.info("      rightKeyPressed=" + rightKeyPressed);
                 if (accelerationX > 0) {
-                    //velocityX = velocityX - speed;
                     accelerationX -= dAccelerationX;
                 }
                 LOGGER.info("HAN RGT KEY  RE" + this);
             } else if (event.getCode() == KeyCode.UP) {
                 upKeyPressed = false;
-//LOGGER.info("jumping?"+onGround);
-//                if(onGround){
-//                    setAccelerationY(getAccelerationY() + GRAVITY);
-//                }
-//                //velocityY = velocityY + speed;
-//                velocityY = 0;
                 LOGGER.info("HAN UP KEY  RE" + this);
             } else if (event.getCode() == KeyCode.DOWN) {
                 downKeyPressed = false;
-                //velocityY = velocityY - speed;
-                //velocityY = 0;
                 LOGGER.info("HAN DO KEY  RE" + this);
             }
 
@@ -174,6 +168,28 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
     @Override
     public String toString() {
         return "Hero{ " + super.toString()+ ",leftKeyPressed=" + leftKeyPressed + ", rightKeyPressed=" + rightKeyPressed + ", upKeyPressed=" + upKeyPressed + ", downKeyPressed=" + downKeyPressed + '}';
+    }
+
+    void reset() {
+        leftKeyPressed = false;
+        rightKeyPressed = false;
+        upKeyPressed = false;
+        downKeyPressed = false;
+        health = MAX_HEALTH;
+        facingDirection = INITIAL_DIRECTION;
+        previousPositionX = 0;
+        previousPositionY = 0;
+        velocityX = 0;
+        velocityY = 0;
+        accelerationX = 0;
+        accelerationY = LeBronQuest.GRAVITY;
+        viewportCounter = 0;
+        imageView.setViewport(viewports.get(viewportCounter));
+        
+        setPositionX(INITIAL_POSITION_X);
+        imageView.setTranslateX(INITIAL_POSITION_X);
+        setPositionY(INITIAL_POSITION_Y - (int) getHeight());
+        imageView.setTranslateY(INITIAL_POSITION_Y - (int) getHeight());
     }
     
 }

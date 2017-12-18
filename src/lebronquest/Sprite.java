@@ -5,6 +5,7 @@
  */
 package lebronquest;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,10 +18,8 @@ import javafx.scene.image.ImageView;
  * @author transflorida
  */
 public abstract class Sprite {
-
+    public static final double GRAVITY = 3;
     private final static Logger LOGGER = Logger.getLogger(Sprite.class.getName());
-    protected String imageFile;
-    protected Image image;
     protected ImageView imageView;
     protected double width;//width is constant, we take the width of the first viewport
     protected double height;//same
@@ -46,11 +45,13 @@ public abstract class Sprite {
     protected boolean isBlockedToTheLeft;
     protected boolean isBlockedAbove;
 
-    public Sprite(String imageFile, int initialX, int initialY, boolean isVisible,
+    public Sprite(String imageFilename, int initialX, int initialY, boolean isVisible,
              int health, Direction facingDirection, double dAccelerationX, double dAccelerationY){
-        this.imageFile = imageFile;        
-        this.image = new Image(imageFile);
-        imageView = new ImageView(this.image);
+        
+        
+        //Get image from jar
+        InputStream imageStream = ClassLoader.getSystemClassLoader().getResourceAsStream(imageFilename);
+        imageView = new ImageView(new Image(imageStream));
         imageView.setCache(true);
         imageView.setSmooth(true);
         viewportCounter = 0;
@@ -69,7 +70,7 @@ public abstract class Sprite {
         velocityX = 0;
         velocityY = 0;
         accelerationX = 0;
-        accelerationY = LeBronQuest.GRAVITY;
+        accelerationY = GRAVITY;
         
         Sprite.dAccelerationX = dAccelerationX;//0.8
         Sprite.dAccelerationY = dAccelerationY;//50
@@ -78,20 +79,12 @@ public abstract class Sprite {
 
     public abstract void update(double dt);
 
-    public Image getImage() {
-        return image;
-    }
-
     public double getWidth() {
         return width;
     }
 
     public double getHeight() {
         return height;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 
     public ImageView getImageView() {

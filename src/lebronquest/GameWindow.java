@@ -5,6 +5,7 @@
  */
 package lebronquest;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,6 @@ public class GameWindow {
     public static final int SCENE_HEIGHT = 22 * TileType.TILE_WIDTH; //Tile size is 32x32
     private static final String GAME_ICON = "img/icon.png";
     private static final String GAME_TITLE = "Lebron Quest";
-    private static final String GAME_MUSIC_FILE = "src/resources/bgm_12.mp3";
     private LeBronQuest application;
     private Group gameRoot;
     private Scene scene;
@@ -62,11 +62,13 @@ public class GameWindow {
 
         createGameScene();
 
-        application.playSound(GAME_MUSIC_FILE);
+        application.playSound(application.GAME_MUSIC_FILE);
 
         gameWindow.setTitle(GAME_TITLE);
         gameWindow.setScene(scene);
-        gameWindow.getIcons().add(new Image(GAME_ICON));
+         //Get icon from jar
+        InputStream iconStream = ClassLoader.getSystemClassLoader().getResourceAsStream(GAME_ICON);
+        gameWindow.getIcons().add(new Image(iconStream));
         gameWindow.initModality(Modality.APPLICATION_MODAL);
         gameWindow.show();
 
@@ -120,7 +122,7 @@ public class GameWindow {
                     if(application.isGameLost() || application.isGameWon()){
                         application.playSound(application.GAME_OVER_MUSIC_FILE);
                     } else {
-                        application.playSound(GAME_MUSIC_FILE);
+                        application.playSound(application.GAME_MUSIC_FILE);
                     }
                     soundButton.setGraphic(soundOffImageView);
                 }
@@ -213,7 +215,7 @@ public class GameWindow {
                 LOGGER.info("**************************************RESTART*****************************************");
                 if (application.isSoundIsPlaying()) {
                     application.stopSound();
-                    application.playSound(GAME_MUSIC_FILE);
+                    application.playSound(application.GAME_MUSIC_FILE);
                 } 
                 application.restart();
                 hideFinalScene();

@@ -182,7 +182,7 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
         velocityX = 0;
         velocityY = 0;
         accelerationX = 0;
-        accelerationY = LeBronQuest.GRAVITY;
+        accelerationY = Sprite.GRAVITY;
         viewportCounter = 0;
         imageView.setViewport(viewports.get(viewportCounter));
         

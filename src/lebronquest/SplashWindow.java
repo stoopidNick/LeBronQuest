@@ -5,6 +5,7 @@
  */
 package lebronquest;
 
+import java.io.InputStream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -27,7 +28,6 @@ public class SplashWindow implements EventHandler<KeyEvent> {
     private static final String SPLASH_IMAGE = "img/lbj simple.png";
     private static final String SPLASH_ICON = "img/icon.png";
     private static final String SPLASH_TITLE = "Lebron Quest";
-    private static final String INTRO_MUSIC_FILE = "src/resources/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
     
     private LeBronQuest application;
     
@@ -39,11 +39,13 @@ public class SplashWindow implements EventHandler<KeyEvent> {
     public void show(){
         Scene splashScene = createSplashScene();
         
-        application.playSound(INTRO_MUSIC_FILE);
+        application.playSound(application.INTRO_MUSIC_FILE);
         
         application.getPrimaryStage().setTitle(SPLASH_TITLE);
         application.getPrimaryStage().setScene(splashScene);
-        application.getPrimaryStage().getIcons().add(new Image(SPLASH_ICON));
+         //Get icon from jar
+        InputStream iconStream = ClassLoader.getSystemClassLoader().getResourceAsStream(SPLASH_ICON);
+        application.getPrimaryStage().getIcons().add(new Image(iconStream));
         application.getPrimaryStage().show();
     }
     
@@ -89,7 +91,9 @@ public class SplashWindow implements EventHandler<KeyEvent> {
         startButton.setTranslateY(SPLASH_HEIGHT - startButton.getHeight() - 5);
 
         //Add image
-        ImageView splash = new ImageView(new Image(SPLASH_IMAGE));
+        //Get image from jar
+        InputStream imageStream = ClassLoader.getSystemClassLoader().getResourceAsStream(SPLASH_IMAGE);
+        ImageView splash = new ImageView(new Image(imageStream));
         splashRoot.getChildren().add(splash);
         
         scene.setOnKeyPressed(this);

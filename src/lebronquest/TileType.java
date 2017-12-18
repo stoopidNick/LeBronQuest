@@ -5,6 +5,7 @@
  */
 package lebronquest;
 
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.Image;
@@ -28,7 +29,9 @@ public class TileType {
 
     public TileType(String filename, boolean isSolidTop, boolean isSolidBottom, boolean isSolidLeft, boolean isSolidRight, int ID) {
         LOGGER.setLevel(Level.INFO);
-        image = new Image(filename);
+        //USe the classloader to tget the image from the jar file
+        InputStream imageStream = ClassLoader.getSystemClassLoader().getResourceAsStream(filename);
+        image = new Image(imageStream);
         this.isSolidTop = isSolidTop;
         this.isSolidBottom = isSolidBottom;
         this.isSolidLeft = isSolidLeft;

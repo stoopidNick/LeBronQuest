@@ -5,8 +5,12 @@
  */
 package lebronquest;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +24,7 @@ import javafx.scene.image.ImageView;
 public class World {
 
     private final static Logger LOGGER = Logger.getLogger(World.class.getName());
-    private static final String MAP_FILENAME = "src/resources/map.txt";
+    private static final String MAP_FILENAME = "resources/map.txt";
     private static int MAP_WIDTH;
     public static int GAME_WIDTH;
     private static int MAP_HEIGHT;
@@ -241,31 +245,62 @@ public class World {
     }
 
     private void readMap() {
-        try {
-            File file = new File(MAP_FILENAME);
-            Scanner scanner = new Scanner(file);
 
-            MAP_WIDTH = scanner.nextInt();
-            GAME_WIDTH = MAP_WIDTH * TileType.TILE_WIDTH;
-            MAP_HEIGHT = scanner.nextInt();
-            GAME_HEIGHT = MAP_HEIGHT * TileType.TILE_HEIGHT;
-            tileMap = new Tile[MAP_HEIGHT][MAP_WIDTH];
+        //You can not access a resource in a Jar file through a FileReader
+        //because it is not a file on the file system. Java does have a mechanism
+        //for accessing resources in your classpath (including in Jars):
+        //ClassLoader.getResourceAsStream()
+        //File file = new File(MAP_FILENAME);
+        //Scanner scanner = new Scanner(file);
+        InputStream mapStream = ClassLoader.getSystemClassLoader().getResourceAsStream(MAP_FILENAME);
+        if (mapStream != null) {
+            
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(mapStream))) {
 
-            for (int row = 0; row < MAP_HEIGHT; row++) {
-                for (int col = 0; col < MAP_WIDTH; col++) {
-                    int intType = scanner.nextInt();
-                    ImageView imageView = new ImageView(TILE_TYPES[intType].getImage());
-                    imageView.setTranslateX(col * TileType.TILE_WIDTH);
-                    imageView.setTranslateY(row * TileType.TILE_HEIGHT);
-                    root.getChildren().add(imageView);
-                    tileMap[row][col] = new Tile(imageView, TILE_TYPES[intType], row, col);
+            String sCurrentLine;
+
+            if ((sCurrentLine = br.readLine()) != null) {
+                MAP_WIDTH = Integer.parseInt(sCurrentLine);
+                GAME_WIDTH = MAP_WIDTH * TileType.TILE_WIDTH;
+                if ((sCurrentLine = br.readLine()) != null) {
+                    MAP_HEIGHT = Integer.parseInt(sCurrentLine);
+                    GAME_HEIGHT = MAP_HEIGHT * TileType.TILE_HEIGHT;
+                    tileMap = new Tile[MAP_HEIGHT][MAP_WIDTH];
+
+                    for (int row = 0; row < MAP_HEIGHT; row++) {
+                        sCurrentLine = br.readLine();
+                        Scanner lineScanner = new Scanner(sCurrentLine);
+                        for (int col = 0; col < MAP_WIDTH; col++) {                            
+                            int intType = lineScanner.nextInt();
+                            ImageView imageView = new ImageView(TILE_TYPES[intType].getImage());
+                            imageView.setTranslateX(col * TileType.TILE_WIDTH);
+                            imageView.setTranslateY(row * TileType.TILE_HEIGHT);
+                            root.getChildren().add(imageView);
+                            tileMap[row][col] = new Tile(imageView, TILE_TYPES[intType], row, col);
+                        }
+                    }
+                } else {
+                    LOGGER.info("ERROR: Map file must include number of columns ...");
                 }
+            } else {
+                LOGGER.info("ERROR: Map file must include number of rows ...");
             }
 
-            scanner.close();
-        } catch (FileNotFoundException ex) {
+        } catch (IOException e) {
+            LOGGER.info("ERROR: Reading map file...");
+            e.printStackTrace();
+        }
+
+            
+            
+           
+            
+            
+
+        } else {
             LOGGER.info("ERROR: Missing map file...");
         }
+
     }
 
     public void translateX(double XScroll) {
@@ -283,12 +318,12 @@ public class World {
             }
         }
     }
-    
+
     void reset() {
         for (int row = 0; row < MAP_HEIGHT; row++) {
             for (int col = 0; col < MAP_WIDTH; col++) {
-                tileMap[row][col].getImageView().setTranslateX(col * TileType.TILE_WIDTH);               
-                tileMap[row][col].getImageView().setTranslateY(row * TileType.TILE_HEIGHT); 
+                tileMap[row][col].getImageView().setTranslateX(col * TileType.TILE_WIDTH);
+                tileMap[row][col].getImageView().setTranslateY(row * TileType.TILE_HEIGHT);
             }
         }
     }
@@ -389,7 +424,5 @@ public class World {
             return null;
         }
     }
-
-    
 
 }

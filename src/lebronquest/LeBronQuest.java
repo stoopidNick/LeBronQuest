@@ -20,7 +20,7 @@ import javafx.util.Duration;
  */
 public class LeBronQuest extends Application {
 
-    private static final String GAME_OVER_MUSIC_FILE = "src/resources/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
+    public static final String GAME_OVER_MUSIC_FILE = "src/resources/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
     private final static Logger LOGGER = Logger.getLogger(LeBronQuest.class.getName());
     public static final double GRAVITY = 3;
     private static final int FRAMES_PER_SECOND = 20;//20
@@ -365,6 +365,16 @@ LOGGER.info("$$$$$$$$$$$$$$$$$$ NO BLOCK TO  THE LEFT");
     public boolean isSoundIsPlaying() {
         return soundIsPlaying;
     }
+
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
+    public boolean isGameLost() {
+        return gameLost;
+    }
+    
+    
 
     void restart() {
         score = 0;

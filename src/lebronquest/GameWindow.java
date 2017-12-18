@@ -117,7 +117,11 @@ public class GameWindow {
                     application.stopSound();
                     soundButton.setGraphic(soundOnImageView);
                 } else {
-                    application.playSound(GAME_MUSIC_FILE);
+                    if(application.isGameLost() || application.isGameWon()){
+                        application.playSound(application.GAME_OVER_MUSIC_FILE);
+                    } else {
+                        application.playSound(GAME_MUSIC_FILE);
+                    }
                     soundButton.setGraphic(soundOffImageView);
                 }
             }

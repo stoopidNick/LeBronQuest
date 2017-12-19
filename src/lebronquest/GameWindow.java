@@ -33,7 +33,7 @@ public class GameWindow {
     private static final Color GAME_BACKGROUND_COLOR = Color.AQUA;
     public static final int SCENE_WIDTH = 30 * TileType.TILE_WIDTH; //Tile size is 32x32
     public static final int SCENE_HEIGHT = 22 * TileType.TILE_WIDTH; //Tile size is 32x32
-    private static final String GAME_ICON = "img/icon.png";
+    private static final String GAME_ICON = "resources/img/icon.png";
     private static final String GAME_TITLE = "Lebron Quest";
     private LeBronQuest application;
     private Group gameRoot;

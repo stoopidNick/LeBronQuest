@@ -1,5 +1,6 @@
 package lebronquest;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,35 +8,36 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Hero extends Sprite implements EventHandler<KeyEvent> {
 
     private final static Logger LOGGER = Logger.getLogger(Hero.class.getName());
     private static final double HERO_D_ACCELERATION_X = 0.8f;
-    private static final double HERO_D_ACCELERATION_Y = 50f;    
+    private static final double HERO_D_ACCELERATION_Y = 50f;
     public static final int MAX_HEALTH = 100;
     public static final int INITIAL_POSITION_X = 28 * TileType.TILE_WIDTH / 2;
     public static final int INITIAL_POSITION_Y = GameWindow.SCENE_HEIGHT - 4 * TileType.TILE_HEIGHT;
     public static final Direction INITIAL_DIRECTION = Direction.RIGHT;
-    public static final String imageFilename = "img/hero.png";
+    public static final String IMAGE_FILENAME = "resources/img/hero.png";
+    public static final String JUMP_SOUND_FILENAME = "resources/sounds/jump.mp3"; //http://soundbible.com/tags-jumping.html
 
     private boolean leftKeyPressed;
     private boolean rightKeyPressed;
     private boolean upKeyPressed;
     private boolean downKeyPressed;
 
-   
-
     public Hero() {
-        super(imageFilename, INITIAL_POSITION_X, INITIAL_POSITION_Y, true, MAX_HEALTH, INITIAL_DIRECTION, HERO_D_ACCELERATION_X, HERO_D_ACCELERATION_Y);
-        
+        super(IMAGE_FILENAME, INITIAL_POSITION_X, INITIAL_POSITION_Y, true, MAX_HEALTH, INITIAL_DIRECTION, HERO_D_ACCELERATION_X, HERO_D_ACCELERATION_Y);
+
         leftKeyPressed = false;
         rightKeyPressed = false;
         upKeyPressed = false;
         downKeyPressed = false;
         imageView.setTranslateX(INITIAL_POSITION_X);
         imageView.setTranslateY(INITIAL_POSITION_Y);
-        
+
         ArrayList<Rectangle2D> heroViewPorts = new ArrayList<>();
         heroViewPorts.add(new Rectangle2D(0, 0, 28, 36));
         heroViewPorts.add(new Rectangle2D(47, 0, 28, 36));
@@ -43,16 +45,16 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
         heroViewPorts.add(new Rectangle2D(135, 0, 28, 36));
         heroViewPorts.add(new Rectangle2D(185, 0, 28, 36));
         heroViewPorts.add(new Rectangle2D(232, 0, 28, 36));
-        
+
         setViewports(heroViewPorts);
-        
+
         imageView.setViewport(viewports.get(viewportCounter));
         width = this.getImageView().getBoundsInParent().getWidth();
         height = this.getImageView().getBoundsInParent().getHeight();
         LOGGER.setLevel(Level.OFF);
-        
+
     }
-    
+
     @Override
     public void update(double dt) {
         if (onGround) {
@@ -108,10 +110,21 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
                 facingDirection = Direction.RIGHT;
                 LOGGER.info("HAN RGT KEY  PR" + this);
             } else if (event.getCode() == KeyCode.UP && !upKeyPressed) {
+
                 upKeyPressed = true;
                 //facingDirection = Direction.UP;
                 if (onGround) {
                     accelerationY -= dAccelerationY;
+                    try {
+                        //Get sound path from jar
+                        String soundString = ClassLoader.getSystemClassLoader().getSystemResource(JUMP_SOUND_FILENAME).toURI().toString();
+
+                        Media sound = new Media(soundString);
+                        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+                        mediaPlayer.play();
+                    } catch (URISyntaxException ex) {
+                        LOGGER.info("Error reading sound file");
+                    }
                 }
                 LOGGER.info("HAND UP KEY PR" + this);
             } else if (event.getCode() == KeyCode.DOWN && !downKeyPressed) {
@@ -167,7 +180,7 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
 
     @Override
     public String toString() {
-        return "Hero{ " + super.toString()+ ",leftKeyPressed=" + leftKeyPressed + ", rightKeyPressed=" + rightKeyPressed + ", upKeyPressed=" + upKeyPressed + ", downKeyPressed=" + downKeyPressed + '}';
+        return "Hero{ " + super.toString() + ",leftKeyPressed=" + leftKeyPressed + ", rightKeyPressed=" + rightKeyPressed + ", upKeyPressed=" + upKeyPressed + ", downKeyPressed=" + downKeyPressed + '}';
     }
 
     void reset() {
@@ -185,11 +198,11 @@ public class Hero extends Sprite implements EventHandler<KeyEvent> {
         accelerationY = Sprite.GRAVITY;
         viewportCounter = 0;
         imageView.setViewport(viewports.get(viewportCounter));
-        
+
         setPositionX(INITIAL_POSITION_X);
         imageView.setTranslateX(INITIAL_POSITION_X);
         setPositionY(INITIAL_POSITION_Y - (int) getHeight());
         imageView.setTranslateY(INITIAL_POSITION_Y - (int) getHeight());
     }
-    
+
 }

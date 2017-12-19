@@ -44,7 +44,7 @@ public class World {
 
     private void createTiles() {
         for (int i = 0; i < NUM_TILE_TYPES; i++) {
-            TILE_TYPES[i] = new TileType("img/tiles/tile_" + i + ".png", false, false, false, false, i);
+            TILE_TYPES[i] = new TileType("resources/img/tiles/tile_" + i + ".png", false, false, false, false, i);
         }
 
         TILE_TYPES[0].setIsSolidTop(true);

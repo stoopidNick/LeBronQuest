@@ -25,8 +25,8 @@ public class SplashWindow implements EventHandler<KeyEvent> {
     private static final int SPLASH_WIDTH = 720;
     private static final int SPLASH_HEIGHT = 550;    
     private static final String SPLASH_BUTTON_TEXT = "Start Game";    
-    private static final String SPLASH_IMAGE = "img/lbj simple.png";
-    private static final String SPLASH_ICON = "img/icon.png";
+    private static final String SPLASH_IMAGE = "resources/img/lbj simple.png";
+    private static final String SPLASH_ICON = "resources/img/icon.png";
     private static final String SPLASH_TITLE = "Lebron Quest";
     
     private LeBronQuest application;

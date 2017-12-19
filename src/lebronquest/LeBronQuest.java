@@ -1,7 +1,5 @@
 package lebronquest;
 
-import java.io.File;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,8 +9,6 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -23,9 +19,9 @@ import javafx.util.Duration;
  * @author nicot
  */
 public class LeBronQuest extends Application {
-    public static final String INTRO_MUSIC_FILE = "resources/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
-    public static final String GAME_OVER_MUSIC_FILE = "resources/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
-    public static final String GAME_MUSIC_FILE = "resources/bgm_12.mp3";
+    public static final String INTRO_MUSIC_FILE = "resources/sounds/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
+    public static final String GAME_OVER_MUSIC_FILE = "resources/sounds/bgm_17.mp3";//https://downloads.khinsider.com/game-soundtracks/album/i-live-in-a-different-world-android-game-music/bgm_12.mp3
+    public static final String GAME_MUSIC_FILE = "resources/sounds/bgm_12.mp3";
     private final static Logger LOGGER = Logger.getLogger(LeBronQuest.class.getName());
     
     private static final int FRAMES_PER_SECOND = 20;//20
